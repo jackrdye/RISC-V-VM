@@ -192,15 +192,26 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
 }
 
 // Load from memory helper
-unsigned int read_memory(unsigned char *memory, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+unsigned int read_memory(unsigned char *memory, unsigned char *instructions, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
     // printf("%u", address);
     if (address < 0x0400) {
         // Throw error, Cannot read from instruction memory 
         // Illegal operation
-        printf("Can't read from instructions\n");
-        print_bits(*instruction, 32);
-        illegal_operation(pc, registers, instruction);
+        // printf("Can't read from instructions\n");
+        // print_bits(*instruction, 32);
+        // illegal_operation(pc, registers, instruction);
+        if (num_bytes == 1) {
+            return instructions[address];
+        } else if (num_bytes == 2) {
+            return combine_two_bytes(instructions[address], instructions[address + 1]);
+        } else if (num_bytes == 4) {
+            return combine_four_bytes(instructions[address], instructions[address+1], instructions[address+2], instructions[address+3]);
+        } else {
+            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
+            illegal_operation(pc, registers, instruction);
+        }
+
     } 
     else if (address > 0x8FF) {
         // Exceeds Memory & Virtual Routine bounds
@@ -512,31 +523,31 @@ int main(int argc, char *argv[]) {
             if (I.func3 == 0b000) {
                 // 14. lb
                 unsigned int address = registers[I.rs1] + I.imm;
-                unsigned char value_in_memory = read_memory(memory, address, 1, &pc, registers, &instruction);
+                unsigned char value_in_memory = read_memory(memory, instructions, address, 1, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
             } else if (I.func3 == 0b001) {
                 // 15. lh
                 unsigned int address = registers[I.rs1] + I.imm;
-                uint16_t value_in_memory = read_memory(memory, address, 2, &pc, registers, &instruction);
+                uint16_t value_in_memory = read_memory(memory, instructions, address, 2, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
             } else if (I.func3 == 0b010) {
                 // 16. lw
                 // print_registers(registers);
                 // printf("Reg + Imm = (%u)\n", registers[I.rs1] + I.imm);
                 unsigned int address = registers[I.rs1] + I.imm;
-                unsigned int value_in_memory = read_memory(memory, address, 4, &pc, registers, &instruction);
+                unsigned int value_in_memory = read_memory(memory, instructions, address, 4, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
                 // print_registers(registers);
                 // printf("We have finished lw\n");
             } else if (I.func3 == 0b100) {
                 // 17. lbu
                 unsigned int address = registers[I.rs1] + I.imm;
-                unsigned char value_in_memory = read_memory(memory, address, 1, &pc, registers, &instruction);
+                unsigned char value_in_memory = read_memory(memory, instructions, address, 1, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, value_in_memory);
             } else if (I.func3 == 0b101) {
                 // 18. lhu
                 unsigned int address = registers[I.rs1] + I.imm;
-                uint16_t value_in_memory = read_memory(memory, address, 2, &pc, registers, &instruction);
+                uint16_t value_in_memory = read_memory(memory, instructions, address, 2, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, value_in_memory);
             } else {
                 // func3 not detected -  not implemented
