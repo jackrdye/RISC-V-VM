@@ -240,6 +240,7 @@ unsigned int read_memory(unsigned char *memory, unsigned int address, unsigned i
         // Not implemented - Call to unimplemented Virtual Routine
         not_implemented(pc, registers, instruction);
     }
+    return -1;
 }
 
 // RiskV Type structs - Use bitfields to optimise memory
