@@ -153,7 +153,7 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
     // 0x808
     else if (address == 0x808) {    
         // Console write unsigned integer
-        printf("%u", value);
+        printf("%x", value);
     }
     // 0x820
     else if (address == 0x820) {
