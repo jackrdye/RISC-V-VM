@@ -84,15 +84,15 @@ void print_memory_chunck(unsigned char memory[1024], int address) {
 
 // Register Dump
 void register_dump(unsigned int *pc, unsigned int *registers) {
-    printf("PC = 0x%08X\n", *pc);
+    printf("PC = 0x%08x;\n", *pc);
     for (int i = 0; i < 32; i ++) {
-        printf("R[%d] = 0x%08X\n", i, registers[i]);
+        printf("R[%d] = 0x%08x;\n", i, registers[i]);
     }
 }
 
 // Instruction not Implemented Helper
 void not_implemented(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Instruction Not Implemented: 0x%08X\n", *instruction);
+    printf("Instruction Not Implemented: 0x%08x\n", *instruction);
     register_dump(pc, registers);
     exit(0);
 }
