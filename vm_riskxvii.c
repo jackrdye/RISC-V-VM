@@ -179,11 +179,11 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
         // If the value being stored was not an allocated address raise an illegal operation. 
     }
     // ------------------ Normal Memory Storage ----------------
-    else if (address > 0x0400 && address < 0x7FF) {
+    else if (address >= 0x0400 && address <= 0x7FF) {
         // Store in memory address
         address = address - 0x0400;
         // memory[address] = value;
-        memcpy(&memory[address - 0x0400 - 1], &value, num_bytes);
+        memcpy(&memory[address - 1], &value, num_bytes);
     } else {
         // Throw error 
         // Not implemented - Call to unimplemented Virtual Routine
@@ -223,7 +223,7 @@ unsigned int read_memory(unsigned char *memory, unsigned int address, unsigned i
     }   
 
     // ------------------ Normal Memory Storage ----------------
-    else if (address > 0x0400 && address < 0x7FF) {
+    else if (address >= 0x0400 && address <= 0x7FF) {
         // Store in memory address
         address = address - 0x0400;
         // memory[address] = value;
