@@ -386,7 +386,7 @@ int main(int argc, char *argv[]) {
         printf("Please use 1 command line argument");
         return 0;
     }
-    printf("%s\n", argv[1]);
+    // printf("%s\n", argv[1]);
 
     // Setup VM architecture 
     // Note - unsigned char = 1 byte, unsigned int = 4 bytes.
