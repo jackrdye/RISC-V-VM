@@ -10,7 +10,7 @@
 #define MAX_REGISTER_BYTES 1024
 
 // Helper functions
-void read_binary_file(const char* filename, unsigned char* buffer) {
+int read_binary_file(const char* filename, unsigned char* buffer) {
     FILE* file;
     int size;
 
@@ -28,7 +28,7 @@ void read_binary_file(const char* filename, unsigned char* buffer) {
     }
 
     fclose(file); // close the file
-    // return size; // return the number of bytes read
+    return size; // return the number of bytes read
 }
 
 
@@ -393,8 +393,10 @@ int main(int argc, char *argv[]) {
 
 
     // Read the instructions from file into the instructions array
-    // int instructions_length = read_binary_file(argv[1], instructions);
-    read_binary_file(argv[1], instructions);
+    int instructions_length = read_binary_file(argv[1], instructions);
+    if (instructions_length == -1) {
+        exit(0);
+    }
     int i = 0;
     // Run the VM
     while (running) {
