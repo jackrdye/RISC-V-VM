@@ -146,23 +146,25 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
     }
     // 0x804
     else if (address == 0x804) {
-
+        // Console write signed integer
+        printf("%d", value);
     } 
     // 0x808
-    else if (address == 0x808) {
-
+    else if (address == 0x808) {    
+        // Console write unsigned integer
+        printf("%u", value);
     }
     // 0x820
     else if (address == 0x820) {
-
+        // Dump PC
     }
     // 0x824
     else if (address == 0x824) {
-
+        // Dump Register Banks
     }
     // 0x828
     else if (address == 0x828) {
-
+        // Dump Memory Word
     } 
     // 0x830
     else if (address == 0x830) {
@@ -192,6 +194,7 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
 // Load from memory helper
 unsigned int read_memory(unsigned char *memory, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
+    // printf("%u", address);
     if (address < 0x0400) {
         // Throw error, Cannot read from instruction memory 
         // Illegal operation
@@ -240,6 +243,7 @@ unsigned int read_memory(unsigned char *memory, unsigned int address, unsigned i
         // Not implemented - Call to unimplemented Virtual Routine
         not_implemented(pc, registers, instruction);
     }
+    printf("Should hit this - end of read memory\n");
     return -1;
 }
 
@@ -328,10 +332,11 @@ struct RISK_SB decode_sb(unsigned int instruction) {
     sb.rs2 = (instruction >> 20) & 0b11111;
     unsigned int imm11 = (instruction >> 7) & 0b1;
     unsigned int imm4_1 = (instruction >> 8) & 0b1111; // before 0x1E
-    unsigned int imm10_5 = (instruction >> 20) & 0b111111; // Before 0x7F0
+    unsigned int imm10_5 = (instruction >> 25) & 0b111111; // Before 0x7F0
     unsigned int imm12 = (instruction >> 31) & 0b1;
-    sb.imm = ((imm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | imm4_1) << 1;
-
+    sb.imm = ((imm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | imm4_1 << 1);
+    // printf("SB IMM = (%d)\n", sb.imm);
+    // print_bits(sb.imm, 13);
     return sb;
 }
 
@@ -365,9 +370,11 @@ struct RISK_UJ decode_uj(unsigned int instruction) {
     unsigned int imm11 = (instruction >> 20) & 0b1;
     unsigned int imm19_12 = (instruction >> 12) & 0b11111111;
 
-    int imm = (imm20 << 20) | (imm19_12 << 12) | (imm11 << 11) | (imm10_1 << 1) << 1;
+    int imm = ((imm20 << 20) | (imm19_12 << 12) | (imm11 << 11) | (imm10_1 << 1));
 
     uj.imm = imm;
+    // printf("unsigned (%u), signed (%d): ", uj.imm, uj.imm);
+    // print_bits(uj.imm, 21);
     return uj;
 }
 // Function to get the imm of UJ
@@ -407,11 +414,9 @@ int main(int argc, char *argv[]) {
         // Decode instruction
         // printf("PC: %u\n", pc);
         // printf("Instruction: ");print_bits(instruction, 32);
-        // unsigned int opcode = instruction & 0x1111111;
-        // print_bits(opcode);
         
         // Extract opcode
-        unsigned char opcode = (unsigned char)(instruction & 0b1111111); // for some reason when using 0x1111111 returns 17 which is incorrect
+        unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
         // printf("Opcode Number: %hhu\n", opcode);
         
         // Execution 
@@ -505,27 +510,32 @@ int main(int argc, char *argv[]) {
             // Memory Access Operations
             if (I.func3 == 0b000) {
                 // 14. lb
-                unsigned char value_in_memory = read_memory(memory, registers[I.rs1] + I.imm, 1, &pc, registers, &instruction);
+                unsigned int address = registers[I.rs1] + I.imm;
+                unsigned char value_in_memory = read_memory(memory, address, 1, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
             } else if (I.func3 == 0b001) {
                 // 15. lh
-                uint16_t value_in_memory = read_memory(memory, registers[I.rs1] + I.imm, 2, &pc, registers, &instruction);
+                unsigned int address = registers[I.rs1] + I.imm;
+                uint16_t value_in_memory = read_memory(memory, address, 2, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
             } else if (I.func3 == 0b010) {
                 // 16. lw
                 // print_registers(registers);
                 // printf("Reg + Imm = (%u)\n", registers[I.rs1] + I.imm);
-                unsigned int value_in_memory = read_memory(memory, registers[I.rs1] + I.imm, 4, &pc, registers, &instruction);
+                unsigned int address = registers[I.rs1] + I.imm;
+                unsigned int value_in_memory = read_memory(memory, address, 4, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
                 // print_registers(registers);
                 // printf("We have finished lw\n");
             } else if (I.func3 == 0b100) {
                 // 17. lbu
-                unsigned char value_in_memory = read_memory(memory, registers[I.rs1] + I.imm, 1, &pc, registers, &instruction);
+                unsigned int address = registers[I.rs1] + I.imm;
+                unsigned char value_in_memory = read_memory(memory, address, 1, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, value_in_memory);
             } else if (I.func3 == 0b101) {
                 // 18. lhu
-                uint16_t value_in_memory = read_memory(memory, registers[I.rs1] + I.imm, 1, &pc, registers, &instruction);
+                unsigned int address = registers[I.rs1] + I.imm;
+                uint16_t value_in_memory = read_memory(memory, address, 2, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, value_in_memory);
             } else {
                 // func3 not detected -  not implemented
@@ -653,6 +663,7 @@ int main(int argc, char *argv[]) {
                 illegal_operation(&pc, registers, &instruction);
             }
             jump = true;
+            // print_registers(registers);
         }
         // Instruction Not Implemented
         else {
