@@ -10,7 +10,7 @@
 #define MAX_REGISTER_BYTES 1024
 
 // Helper functions
-int read_binary_file(const char* filename, unsigned char* buffer) {
+void read_binary_file(const char* filename, unsigned char* buffer) {
     FILE* file;
     int size;
 
@@ -28,7 +28,7 @@ int read_binary_file(const char* filename, unsigned char* buffer) {
     }
 
     fclose(file); // close the file
-    return size; // return the number of bytes read
+    // return size; // return the number of bytes read
 }
 
 
@@ -385,15 +385,16 @@ int main(int argc, char *argv[]) {
     unsigned char instructions[1024] = {0}; // store 1024 bytes of instructions
     unsigned int registers[32] = { 0 }; // store 32 registers each containing 4 bytes
     unsigned char memory[1024] = { 0 };
-    unsigned char virtual_routines[256]; 
-    unsigned char heap_bank[128][64]; // should use linked list!!!
+    // unsigned char virtual_routines[256]; 
+    // unsigned char heap_bank[128][64]; // should use linked list!!!
     unsigned int pc = 0;
     bool running = true;
     bool jump = false;
 
 
     // Read the instructions from file into the instructions array
-    int instructions_length = read_binary_file(argv[1], instructions);
+    // int instructions_length = read_binary_file(argv[1], instructions);
+    read_binary_file(argv[1], instructions);
     int i = 0;
     // Run the VM
     while (running) {
