@@ -68,10 +68,18 @@ void print_registers(unsigned int registers[32]) {
     }
 }
 
+void print_register(unsigned int registers[32], unsigned int i) {
+    printf("Register %d: %u\n", i, registers[i]);
+}
+
 void print_memory(unsigned char memory[1024]) {
     for (int i = 0; i < 1024; i += 4) {
         printf("Byte: %d -- %02x %02x %02x %02x\n", i, memory[i], memory[i+1], memory[i+2], memory[i+3]);
     }
+}
+
+void print_memory_chunck(unsigned char memory[1024], int address) {
+
 }
 
 // Register Dump
@@ -196,7 +204,7 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
 unsigned int read_memory(unsigned char *memory, unsigned char *instructions, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
     // printf("%u", address);
-    if (address < 0x0400) {
+    if (address > 0x000 && address < 0x0400) {
         // Throw error, Cannot read from instruction memory 
         // Illegal operation
         // printf("Can't read from instructions\n");
@@ -212,7 +220,6 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, uns
             printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
         }
-
     } 
     else if (address > 0x8FF) {
         // Exceeds Memory & Virtual Routine bounds
@@ -236,16 +243,21 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, uns
     }   
 
     // ------------------ Normal Memory Storage ----------------
-    else if (address >= 0x0400 && address <= 0x7FF) {
+    else if (address >= 0x0400 && address-1+(num_bytes-2) <= 0x7FF) {
         // Store in memory address
         address = address - 0x0400;
         // memory[address] = value;
         if (num_bytes == 1) {
-            return memory[address];
+            return memory[address-1];
         } else if (num_bytes == 2) {
-            return combine_two_bytes(memory[address], memory[address + 1]);
+            return combine_two_bytes(memory[address-1], memory[address]);
         } else if (num_bytes == 4) {
-            return combine_four_bytes(memory[address], memory[address+1], memory[address+2], memory[address+3]);
+            // unsigned int test_memcpy;
+            // memcpy(&test_memcpy, memory[address - 1]);
+            // printf("testmcpy =(%u)\n", test_memcpy);
+            unsigned int read_4bytes_value =  combine_four_bytes(memory[address-1], memory[address], memory[address+1], memory[address+2]);
+            // printf("Read 4 bytes value = (%u)", read_4bytes_value);
+            return read_4bytes_value;
         } else {
             printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
@@ -256,7 +268,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, uns
         // Not implemented - Call to unimplemented Virtual Routine
         not_implemented(pc, registers, instruction);
     }
-    printf("Should hit this - end of read memory\n");
+    printf("Shouldn't hit this - end of read memory\n");
     return -1;
 }
 
@@ -508,7 +520,9 @@ int main(int argc, char *argv[]) {
             struct RISK_I I = decode_i(instruction);
             // 33. jalr
             store_in_register(registers, I.rd, pc + 4);
+            // print_register(registers, 1);
             unsigned int new_pc = registers[I.rs1] + I.imm;
+            // printf("\nNEW PC=(%u)\n", new_pc);
             if (new_pc < 0 || new_pc > 1019) {
                 // Throw error - setting pc to a value which exceeds instruction memory
                 illegal_operation(&pc, registers, &instruction);
@@ -534,7 +548,7 @@ int main(int argc, char *argv[]) {
             } else if (I.func3 == 0b010) {
                 // 16. lw
                 // print_registers(registers);
-                // printf("Reg + Imm = (%u)\n", registers[I.rs1] + I.imm);
+                // printf("Reg(%u) + Imm (%d)= (%u)\n",registers[I.rs1], I.imm, registers[I.rs1] + I.imm);
                 unsigned int address = registers[I.rs1] + I.imm;
                 unsigned int value_in_memory = read_memory(memory, instructions, address, 4, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
