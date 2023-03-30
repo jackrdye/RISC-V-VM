@@ -199,7 +199,7 @@ unsigned int read_memory(unsigned char *memory, unsigned int address, unsigned i
         // Throw error, Cannot read from instruction memory 
         // Illegal operation
         printf("Can't read from instructions\n");
-        print_bits(instruction, 32);
+        print_bits(*instruction, 32);
         illegal_operation(pc, registers, instruction);
     } 
     else if (address > 0x8FF) {
