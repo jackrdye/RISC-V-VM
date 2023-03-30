@@ -405,14 +405,14 @@ int main(int argc, char *argv[]) {
         unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
         
         // Decode instruction
-        printf("PC: %u\n", pc);
-        printf("Instruction: ");print_bits(instruction, 32);
+        // printf("PC: %u\n", pc);
+        // printf("Instruction: ");print_bits(instruction, 32);
         // unsigned int opcode = instruction & 0x1111111;
         // print_bits(opcode);
         
         // Extract opcode
         unsigned char opcode = (unsigned char)(instruction & 0b1111111); // for some reason when using 0x1111111 returns 17 which is incorrect
-        printf("Opcode Number: %hhu\n", opcode);
+        // printf("Opcode Number: %hhu\n", opcode);
         
         // Execution 
         // Type R
