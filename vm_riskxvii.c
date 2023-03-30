@@ -142,7 +142,8 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
     }
     // Write to 0x800 - Print to ASCII character of number to stdout
     else if (address == 0x800) {
-        printf("PRINT ASCII 0x800 -(%c)\n", value);
+        // printf("PRINT ASCII 0x800 -(%c)\n", value);
+        printf("%c", value);
     }
     // 0x804
     else if (address == 0x804) {
