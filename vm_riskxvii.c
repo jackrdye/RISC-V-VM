@@ -78,10 +78,6 @@ void print_memory(unsigned char memory[1024]) {
     }
 }
 
-void print_memory_chunck(unsigned char memory[1024], int address) {
-
-}
-
 // Register Dump
 void register_dump(unsigned int *pc, unsigned int *registers) {
     printf("PC = 0x%08x;\n", *pc);
@@ -99,7 +95,7 @@ void not_implemented(unsigned int *pc, unsigned int *registers, unsigned int *in
 
 // Illegal Operation Helper
 void illegal_operation(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Illegal Operation: 0x%08X\n", *instruction);
+    printf("Illegal Operation: 0x%08x\n", *instruction);
     register_dump(pc, registers);
     exit(0);
 }
@@ -166,14 +162,17 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
     // 0x820
     else if (address == 0x820) {
         // Dump PC
+        printf("%x", *pc);
     }
     // 0x824
     else if (address == 0x824) {
         // Dump Register Banks
+        register_dump(pc, registers);
     }
     // 0x828
     else if (address == 0x828) {
         // Dump Memory Word
+
     } 
     // 0x830
     else if (address == 0x830) {
@@ -213,9 +212,9 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, uns
         if (num_bytes == 1) {
             return instructions[address];
         } else if (num_bytes == 2) {
-            return combine_two_bytes(instructions[address], instructions[address + 1]);
+            return combine_two_bytes(instructions[address-1], instructions[address]);
         } else if (num_bytes == 4) {
-            return combine_four_bytes(instructions[address], instructions[address+1], instructions[address+2], instructions[address+3]);
+            return combine_four_bytes(instructions[address-1], instructions[address], instructions[address+1], instructions[address+2]);
         } else {
             printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
@@ -402,7 +401,6 @@ struct RISK_UJ decode_uj(unsigned int instruction) {
     // print_bits(uj.imm, 21);
     return uj;
 }
-// Function to get the imm of UJ
 
 
 
