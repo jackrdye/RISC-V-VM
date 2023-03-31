@@ -165,19 +165,19 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, uns
     }   
 
     // ------------------ Normal Memory Storage ----------------
-    else if (address >= 0x0400 && address-1+(num_bytes-2) <= 0x7FF) {
+    else if (address >= 0x0400 && address+(num_bytes-1) <= 0x7FF) {
         // Store in memory address
         address = address - 0x0400;
         // memory[address] = value;
         if (num_bytes == 1) {
-            return memory[address-1];
+            return memory[address];
         } else if (num_bytes == 2) {
-            return combine_two_bytes(memory[address-1], memory[address]);
+            return combine_two_bytes(memory[address], memory[address+1]);
         } else if (num_bytes == 4) {
             // unsigned int test_memcpy;
             // memcpy(&test_memcpy, memory[address - 1]);
             // printf("testmcpy =(%u)\n", test_memcpy);
-            unsigned int read_4bytes_value =  combine_four_bytes(memory[address-1], memory[address], memory[address+1], memory[address+2]);
+            unsigned int read_4bytes_value =  combine_four_bytes(memory[address], memory[address+1], memory[address+2], memory[address+3]);
             // printf("Read 4 bytes value = (%u)", read_4bytes_value);
             return read_4bytes_value;
         } else {
@@ -263,7 +263,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, unsigne
         // Store in memory address
         address = address - 0x0400;
         // memory[address] = value;
-        memcpy(&memory[address - 1], &value, num_bytes);
+        memcpy(&memory[address], &value, num_bytes);
     } else {
         // Throw error 
         // Not implemented - Call to unimplemented Virtual Routine
