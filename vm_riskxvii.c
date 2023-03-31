@@ -123,7 +123,7 @@ void store_in_register(unsigned int *registers, unsigned char store_in, int set_
 // Read Regsiter - Register always specified in instruction not by program thus cannot exceed 5 bits. (Do not need helper)
 
 // Store in memory helper
-void store_in_memory(unsigned char *memory, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+void store_in_memory(unsigned char *memory, unsigned int *instructions, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
     if (address < 0x0400) {
         // Throw error, Cannot overwrite instruction memory 
@@ -172,7 +172,7 @@ void store_in_memory(unsigned char *memory, unsigned int address, unsigned int v
     // 0x828
     else if (address == 0x828) {
         // Dump Memory Word
-
+        printf("%x", read_memory(memory, instructions, value, 4, pc, registers, instruction));
     } 
     // 0x830
     else if (address == 0x830) {
@@ -578,13 +578,13 @@ int main(int argc, char *argv[]) {
                 // memory[registers[S.rs1] + S.imm] = registers[S.rs2];
                 // printf("Store in memory. memory addr-(%d). Value-(%d)\n", registers[S.rs1] + S.imm, registers[S.rs2]);
                 // printf("Register value=(%d). S IMM value=(%d)\n", registers[S.rs1], S.imm);
-                store_in_memory(memory, registers[S.rs1] + S.imm, registers[S.rs2], 1, &pc, registers, &instruction);
+                store_in_memory(memory, instructions, registers[S.rs1] + S.imm, registers[S.rs2], 1, &pc, registers, &instruction);
             } else if (S.func3 == 0b001) {
                 // 20. sh
-                store_in_memory(memory, registers[S.rs1] + S.imm, registers[S.rs2], 2, &pc, registers, &instruction);
+                store_in_memory(memory, instructions, registers[S.rs1] + S.imm, registers[S.rs2], 2, &pc, registers, &instruction);
             } else if (S.func3 == 0b010) {
                 // 21. sw
-                store_in_memory(memory, registers[S.rs1] + S.imm, registers[S.rs2], 4, &pc, registers, &instruction);
+                store_in_memory(memory, instructions, registers[S.rs1] + S.imm, registers[S.rs2], 4, &pc, registers, &instruction);
             } else {
                 // func3 not detected -  not implemented
                 not_implemented(&pc, registers, &instruction);
