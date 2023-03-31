@@ -122,8 +122,80 @@ void store_in_register(unsigned int *registers, unsigned char store_in, int set_
 }
 // Read Regsiter - Register always specified in instruction not by program thus cannot exceed 5 bits. (Do not need helper)
 
+// Load from memory helper
+unsigned int read_memory(unsigned char *memory, unsigned char *instructions, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    // address = address - 0x0400;
+    // printf("%u", address);
+    if (address > 0x000 && address < 0x0400) {
+        // Throw error, Cannot read from instruction memory 
+        // Illegal operation
+        // printf("Can't read from instructions\n");
+        // print_bits(*instruction, 32);
+        // illegal_operation(pc, registers, instruction);
+        if (num_bytes == 1) {
+            return instructions[address];
+        } else if (num_bytes == 2) {
+            return combine_two_bytes(instructions[address-1], instructions[address]);
+        } else if (num_bytes == 4) {
+            return combine_four_bytes(instructions[address-1], instructions[address], instructions[address+1], instructions[address+2]);
+        } else {
+            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
+            illegal_operation(pc, registers, instruction);
+        }
+    } 
+    else if (address > 0x8FF) {
+        // Exceeds Memory & Virtual Routine bounds
+        // Illegal operation
+        printf("Exceeds memory bounds\n");
+        illegal_operation(pc, registers, instruction);
+    }
+
+    // -------------------Virtual Routines-------------------------
+    else if (address == 0x0812) {
+        // Console Read Character
+        char input;
+        scanf("%c", &input);
+        return input;
+    }
+    else if (address == 0x0816) {
+        // Console read signed integer
+        int num;
+        scanf("%d", &num);
+        return num;
+    }   
+
+    // ------------------ Normal Memory Storage ----------------
+    else if (address >= 0x0400 && address-1+(num_bytes-2) <= 0x7FF) {
+        // Store in memory address
+        address = address - 0x0400;
+        // memory[address] = value;
+        if (num_bytes == 1) {
+            return memory[address-1];
+        } else if (num_bytes == 2) {
+            return combine_two_bytes(memory[address-1], memory[address]);
+        } else if (num_bytes == 4) {
+            // unsigned int test_memcpy;
+            // memcpy(&test_memcpy, memory[address - 1]);
+            // printf("testmcpy =(%u)\n", test_memcpy);
+            unsigned int read_4bytes_value =  combine_four_bytes(memory[address-1], memory[address], memory[address+1], memory[address+2]);
+            // printf("Read 4 bytes value = (%u)", read_4bytes_value);
+            return read_4bytes_value;
+        } else {
+            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
+            illegal_operation(pc, registers, instruction);
+        }
+
+    } else {
+        // Throw error 
+        // Not implemented - Call to unimplemented Virtual Routine
+        not_implemented(pc, registers, instruction);
+    }
+    printf("Shouldn't hit this - end of read memory\n");
+    return -1;
+}
+
 // Store in memory helper
-void store_in_memory(unsigned char *memory, unsigned int *instructions, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+void store_in_memory(unsigned char *memory, unsigned char *instructions, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
     if (address < 0x0400) {
         // Throw error, Cannot overwrite instruction memory 
@@ -199,77 +271,7 @@ void store_in_memory(unsigned char *memory, unsigned int *instructions, unsigned
     }
 }
 
-// Load from memory helper
-unsigned int read_memory(unsigned char *memory, unsigned char *instructions, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    // address = address - 0x0400;
-    // printf("%u", address);
-    if (address > 0x000 && address < 0x0400) {
-        // Throw error, Cannot read from instruction memory 
-        // Illegal operation
-        // printf("Can't read from instructions\n");
-        // print_bits(*instruction, 32);
-        // illegal_operation(pc, registers, instruction);
-        if (num_bytes == 1) {
-            return instructions[address];
-        } else if (num_bytes == 2) {
-            return combine_two_bytes(instructions[address-1], instructions[address]);
-        } else if (num_bytes == 4) {
-            return combine_four_bytes(instructions[address-1], instructions[address], instructions[address+1], instructions[address+2]);
-        } else {
-            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
-            illegal_operation(pc, registers, instruction);
-        }
-    } 
-    else if (address > 0x8FF) {
-        // Exceeds Memory & Virtual Routine bounds
-        // Illegal operation
-        printf("Exceeds memory bounds\n");
-        illegal_operation(pc, registers, instruction);
-    }
 
-    // -------------------Virtual Routines-------------------------
-    else if (address == 0x0812) {
-        // Console Read Character
-        char input;
-        scanf("%c", &input);
-        return input;
-    }
-    else if (address == 0x0816) {
-        // Console read signed integer
-        int num;
-        scanf("%d", &num);
-        return num;
-    }   
-
-    // ------------------ Normal Memory Storage ----------------
-    else if (address >= 0x0400 && address-1+(num_bytes-2) <= 0x7FF) {
-        // Store in memory address
-        address = address - 0x0400;
-        // memory[address] = value;
-        if (num_bytes == 1) {
-            return memory[address-1];
-        } else if (num_bytes == 2) {
-            return combine_two_bytes(memory[address-1], memory[address]);
-        } else if (num_bytes == 4) {
-            // unsigned int test_memcpy;
-            // memcpy(&test_memcpy, memory[address - 1]);
-            // printf("testmcpy =(%u)\n", test_memcpy);
-            unsigned int read_4bytes_value =  combine_four_bytes(memory[address-1], memory[address], memory[address+1], memory[address+2]);
-            // printf("Read 4 bytes value = (%u)", read_4bytes_value);
-            return read_4bytes_value;
-        } else {
-            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
-            illegal_operation(pc, registers, instruction);
-        }
-
-    } else {
-        // Throw error 
-        // Not implemented - Call to unimplemented Virtual Routine
-        not_implemented(pc, registers, instruction);
-    }
-    printf("Shouldn't hit this - end of read memory\n");
-    return -1;
-}
 
 // RiskV Type structs - Use bitfields to optimise memory
 // Decode Instructions & Load into struct
