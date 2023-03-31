@@ -10,9 +10,10 @@
 #define MAX_REGISTER_BYTES 1024
 
 // Helper functions
-int read_binary_file(const char* filename, unsigned char* buffer) {
+int read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
     FILE* file;
     int size;
+    int size2;
 
     file = fopen(filename, "rb"); // open the binary file for reading
     if (file == NULL) {
@@ -21,14 +22,19 @@ int read_binary_file(const char* filename, unsigned char* buffer) {
     }
 
     // read up to MAX_BYTES bytes from the file into the buffer
-    size = fread(buffer, 1, MAX_INSTRUCTION_BYTES, file);
+    size = fread(instructions, 1, MAX_INSTRUCTION_BYTES, file);
     if (ferror(file)) {
         perror("Error reading file");
         size = -1;
     }
+    // if (size != 1024) {
 
+    // }
+
+    size2 = fread(memory, 1, 1024, file);
+    
     fclose(file); // close the file
-    return size; // return the number of bytes read
+    return (size == -1 || size2 == -1)? 1 : 2048; // return the number of bytes read
 }
 
 
@@ -426,7 +432,7 @@ int main(int argc, char *argv[]) {
 
 
     // Read the instructions from file into the instructions array
-    int instructions_length = read_binary_file(argv[1], instructions);
+    int instructions_length = read_binary_file(argv[1], instructions, memory);
     if (instructions_length == -1) {
         exit(0);
     }
