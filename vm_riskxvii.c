@@ -339,7 +339,7 @@ int main(int argc, char *argv[]) {
         }
         bool jump = false;
         // Fetch instruction
-        const unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
+        unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
         
         // Decode instruction
         // printf("PC: %u. ", pc);
@@ -347,14 +347,14 @@ int main(int argc, char *argv[]) {
         // printf("Instruction: ");print_bits(instruction, 32);
         
         // Extract opcode
-        const unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
+        unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
         // printf("Opcode Number: %hhu\n", opcode);
         
         // Execution 
         // Type R
         if (opcode == 0b0110011) {
             // Decode Type R instruction
-            struct RISK_R R = decode_r(instruction);
+            const struct RISK_R R = decode_r(instruction);
             if (R.func3 == 0b000 && R.func7 == 0b0000000) {
                 // 1. add
                 if (registers[R.rs1] > (__UINT32_MAX__ - registers[R.rs2])) {
@@ -407,7 +407,7 @@ int main(int argc, char *argv[]) {
         // Type I
         else if (opcode == 0b0010011) {
             // Decode Type I instruction
-            struct RISK_I I = decode_i(instruction);
+            const struct RISK_I I = decode_i(instruction);
             if (I.func3 == 0b000) {
                 // 2. addi
                 // registers[I.rd] = registers[I.rs1] + I.imm;
