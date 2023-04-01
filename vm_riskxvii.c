@@ -271,13 +271,13 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         // Request a chunck of memory with the size of the value being stored 
         // Pointer to the allocated memory (starting address) will be stored in R[28]
         // If the memory cannot be allocated R[28] should be set to 0.
-        registers[28] = allocate(head, value);
+        registers[28] = allocate(head, &value);
     } 
     // 0x834
     else if (address == 0x834) {
         // Free a chunk of memory starting at the value being stored.
         // If the value being stored was not an allocated address raise an illegal operation. 
-        free_heap_bank(head, value, pc, registers, instruction); 
+        free_heap_bank(head, &value, pc, registers, instruction); 
     }
     // ------------------ Normal Memory Storage ----------------
     else if (address >= 0x0400 && address <= 0x7FF) {

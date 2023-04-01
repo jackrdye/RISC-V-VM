@@ -47,9 +47,9 @@ Node* create_heap_bank(Node *head) {
 
 
 // Returns the virtual address of 1st byte
-unsigned int allocate(Node *head, unsigned int bytes_to_allocate) {
+unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
     // Find consecutive banks
-    short required_banks = (bytes_to_allocate / 64) + 1;
+    short required_banks = (*bytes_to_allocate / 64) + 1;
     Node *current_node = head;
     Node *start_node = NULL;
     unsigned short start_heap_bank_index = -1;
