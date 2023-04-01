@@ -15,7 +15,7 @@ void read_binary_file(const char* filename, unsigned char *instructions, unsigne
 
     file = fopen(filename, "rb"); // open the binary file for reading
     if (file == NULL) {
-        perror("Error opening file");
+        // perror("Error opening file");
         exit(1);
         // return -1;
     }
@@ -24,7 +24,7 @@ void read_binary_file(const char* filename, unsigned char *instructions, unsigne
     // size = 
     fread(instructions, 1, 1024, file);
     if (ferror(file)) {
-        perror("Error reading file");
+        // perror("Error reading file");
         exit(1);
         // size = -1;
     }
