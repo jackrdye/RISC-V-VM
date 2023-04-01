@@ -193,7 +193,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         not_implemented(pc, registers, instruction);
     }
     // printf("Shouldn't hit this - end of read memory\n");
-    return -1;
+    // return -1;
 }
 
 // Store in memory helper
