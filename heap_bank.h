@@ -114,7 +114,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
         current_node = current_node->next;
     }
     
-    return start_heap_bank_index*64;
+    return start_heap_bank_index*64 + 0xB700;
 }
 
 void free_heap_bank(Node *head, unsigned int *virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
