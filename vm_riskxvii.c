@@ -274,7 +274,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
     else if (address == 0x834) {
         // Free a chunk of memory starting at the value being stored.
         // If the value being stored was not an allocated address raise an illegal operation. 
-        printf("Free Heap Bank located at (%x)\n", value);
+        // printf("Free Heap Bank located at (%x)\n", value);
         free_heap_bank(head, value, pc, registers, instruction); 
     }
     // ------------------ Normal Memory Storage ----------------

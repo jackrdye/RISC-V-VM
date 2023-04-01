@@ -118,7 +118,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
 }
 
 void free_heap_bank(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Free memory at address (%x)\n", virtual_address);
+    // printf("Free memory at address (%x)\n", virtual_address);
     unsigned int index = virtual_address - 0xb700;
     // If index to free is not the 1st byte of a block it cannot be freed
     if (index % 64 != 0) {
@@ -179,7 +179,6 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
         current_node = current_node->next;
     }
     if (current_node->size-1 < index % 64 || current_node->size == 0) {
-        // This is being triggered early!
         illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
     // printf("Store to ind")
