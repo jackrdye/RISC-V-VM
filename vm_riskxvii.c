@@ -272,7 +272,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         // Pointer to the allocated memory (starting address) will be stored in R[28]
         // If the memory cannot be allocated R[28] should be set to 0.
         printf("Allocate (%u) Bytes\n", value);
-        registers[28] = allocate(head, &value);
+        registers[28] = allocate(head, &value) + 0xB700;
         printf("Bytes allocated at, Register 28: (%x)\n", registers[28]);
     } 
     // 0x834
