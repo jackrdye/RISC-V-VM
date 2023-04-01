@@ -117,8 +117,9 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
     return start_heap_bank_index*64 + 0xB700;
 }
 
-void free_heap_bank(Node *head, unsigned int *virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    unsigned int index = *virtual_address - 0xb700;
+void free_heap_bank(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    printf("Free memory at address (%x)\n", virtual_address);
+    unsigned int index = virtual_address - 0xb700;
     // If index to free is not the 1st byte of a block it cannot be freed
     if (index % 64 != 0) {
         illegal_operation(pc, registers, instruction);
