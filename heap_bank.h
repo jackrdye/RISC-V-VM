@@ -102,6 +102,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
         } else {
             current_node->size = remaining;
         }
+        printf("Block %d size is: %d\n", i, current_node->size);
         remaining = remaining - 64;
 
         current_node->addr = (unsigned char *)malloc(current_node->size);
