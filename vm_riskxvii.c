@@ -132,7 +132,7 @@ void store_in_register(unsigned int *registers, unsigned char store_in, int set_
 unsigned int read_memory(unsigned char *memory, unsigned char *instructions, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
     // printf("%u", address);
-    if (address > 0x000 && address < 0x0400) {
+    if (address >= 0x000 && address + (num_bytes-1)< 0x0400) {
         // Throw error, Cannot read from instruction memory 
         // Illegal operation
         // printf("Can't read from instructions\n");
@@ -141,9 +141,9 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, uns
         if (num_bytes == 1) {
             return instructions[address];
         } else if (num_bytes == 2) {
-            return combine_two_bytes(instructions[address-1], instructions[address]);
+            return combine_two_bytes(instructions[address], instructions[address+1]);
         } else if (num_bytes == 4) {
-            return combine_four_bytes(instructions[address-1], instructions[address], instructions[address+1], instructions[address+2]);
+            return combine_four_bytes(instructions[address], instructions[address+1], instructions[address+2], instructions[address+3]);
         } else {
             printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
@@ -466,7 +466,7 @@ int main(int argc, char *argv[]) {
                 if (registers[R.rs1] > (UINT32_MAX - registers[R.rs2])) {
                     // Integer Overflow
                     store_in_register(registers, R.rd, registers[R.rs1] + registers[R.rs2]);
-                    printf("Integer overflow detected in 'add'\n");
+                    // printf("Integer overflow detected in 'add'\n");
                 } else {
                     store_in_register(registers, R.rd, registers[R.rs1] + registers[R.rs2]);
                 }
@@ -475,7 +475,7 @@ int main(int argc, char *argv[]) {
                 if (registers[R.rs1] < registers[R.rs2]) {
                     // Integer Underflow
                     store_in_register(registers, R.rd, registers[R.rs1] - registers[R.rs2]);
-                    printf("Integer underflow detected in 'sub'\n");
+                    // printf("Integer underflow detected in 'sub'\n");
                 } else {
                     store_in_register(registers, R.rd, registers[R.rs1] - registers[R.rs2]);
                 }
@@ -521,7 +521,7 @@ int main(int argc, char *argv[]) {
                 if (I.imm > 0 && registers[I.rs1] > (UINT32_MAX - I.imm)) {
                     // Integer Overflow
                     store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
-                    printf("Integer overflow detected in 'addi'\n");
+                    // printf("Integer overflow detected in 'addi'\n");
                 } else if (I.imm < 0 && registers[I.rs1] < I.imm) {
                     store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
                     // printf("Integer underflow detected in 'addi'\n");
