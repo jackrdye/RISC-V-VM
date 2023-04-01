@@ -480,7 +480,7 @@ int main(int argc, char *argv[]) {
         
         // Decode instruction
         printf("PC: %u. ", pc);
-        printf("Register 14 = (%u), Register 15 = (%u). ");
+        printf("Register 14 = (%u), Register 15 = (%u). ", registers[14], registers[15]);
         printf("Instruction: ");print_bits(instruction, 32);
         
         // Extract opcode
