@@ -287,6 +287,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
 
     // ---------------------- Heap Banks ----------------------
     else if (address >= 0xB700) {
+        
         store_byte_in_heap(head, address, (unsigned char) value, pc, registers, instruction);
         
         if (num_bytes >= 2) {
@@ -478,8 +479,8 @@ int main(int argc, char *argv[]) {
         unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
         
         // Decode instruction
-        // printf("PC: %u\n", pc);
-        // printf("Instruction: ");print_bits(instruction, 32);
+        printf("PC: %u. ", pc);
+        printf("Instruction: ");print_bits(instruction, 32);
         
         // Extract opcode
         unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
