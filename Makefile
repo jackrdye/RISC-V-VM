@@ -17,7 +17,7 @@ $(TARGET):$(OBJ)
 
 .c.o:
 	 $(CC) $(CFLAGS) $(ASAN_FLAGS) $<
-	strip $(TARGET)
+	strip $(TARGET).o 
 
 run:
 	./$(TARGET)
