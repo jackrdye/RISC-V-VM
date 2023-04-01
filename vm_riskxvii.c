@@ -273,6 +273,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         // If the memory cannot be allocated R[28] should be set to 0.
         printf("Allocate (%u) Bytes\n", value);
         registers[28] = allocate(head, &value);
+        printf("Bytes allocated at, Register 28: (%x)\n", registers[28]);
     } 
     // 0x834
     else if (address == 0x834) {
