@@ -55,12 +55,15 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
     unsigned short start_heap_bank_index = -1;
     short num_banks = 0;
     for (int i = 0; i < 128; i++) {
-        if (current_node->size != 0) {
+        printf("Bank %d size: (%u)", current_node->size);
+        if (current_node->size != 0) { 
+            // Bank Occupied
             num_banks = 0;
             current_node = current_node->next;
             start_node = &*(current_node); // set to pointer to underlying Node not the current_node pointer
             start_heap_bank_index = i;
         } else if (current_node->size == 0) {
+            // Bank Unoccupied
             num_banks += 1;
             if (num_banks == required_banks) {
                 break;
