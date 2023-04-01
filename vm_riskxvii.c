@@ -86,27 +86,14 @@ uint16_t combine_two_bytes(unsigned char b1, unsigned char b2) {
 //     }
 // }
 
-// // Register Dump
-// void register_dump(unsigned int *pc, unsigned int *registers) {
-//     printf("PC = 0x%08x;\n", *pc);
-//     for (int i = 0; i < 32; i ++) {
-//         printf("R[%d] = 0x%08x;\n", i, registers[i]);
-//     }
-// }
 
 // Instruction not Implemented Helper
-void not_implemented(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+void not_implemented(unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     printf("Instruction Not Implemented: 0x%x\n", *instruction);
     register_dump(pc, registers);
     exit(1);
 }
 
-// // Illegal Operation Helper
-// void illegal_operation(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-//     printf("Illegal Operation: 0x%08x\n", *instruction);
-//     register_dump(pc, registers);
-//     exit(1);
-// }
 
 // Ensure PC not out of bounds
 bool valid_pc(unsigned short *pc) {
@@ -131,7 +118,7 @@ void store_in_register(unsigned int *registers, unsigned char store_in, int set_
 // Read Regsiter - Register always specified in instruction not by program thus cannot exceed 5 bits. (Do not need helper)
 
 // Load from memory helper
-unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int num_bytes, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
     // printf("%u", address);
     if (address >= 0x000 && address + (num_bytes-1)< 0x0400) {
@@ -210,7 +197,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
 }
 
 // Store in memory helper
-void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     // printf("PC=%u --- Write to (%x)\n", *pc, address);
     if (address < 0x0400) {
         // Throw error, Cannot overwrite instruction memory 

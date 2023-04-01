@@ -6,15 +6,15 @@
 #define HEAP_BANK_H
 
 // Register Dump
-void register_dump(unsigned int *pc, unsigned int *registers) {
+void register_dump(unsigned short *pc, unsigned int *registers) {
     printf("PC = 0x%08x;\n", *pc);
     for (int i = 0; i < 32; i ++) {
         printf("R[%d] = 0x%08x;\n", i, registers[i]);
     }
 }
 
-
-void illegal_operation(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+// // Illegal Operation Helper
+void illegal_operation(unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     printf("Illegal Operation: 0x%08x\n", *instruction);
     register_dump(pc, registers);
     exit(1);
@@ -117,7 +117,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
     return start_heap_bank_index*64 + 0xB700;
 }
 
-void free_heap_bank(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+void free_heap_bank(Node *head, unsigned int virtual_address, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     // printf("Free memory at address (%x)\n", virtual_address);
     unsigned int index = virtual_address - 0xb700;
     // If index to free is not the 1st byte of a block it cannot be freed
