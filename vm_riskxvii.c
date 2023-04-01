@@ -318,8 +318,6 @@ int main(int argc, char *argv[]) {
     // short instructions_length = 
     // read_binary_file(argv[1], instructions, memory);
     FILE* file;
-    // short size;
-    // short size2;
 
     file = fopen(argv[1], "rb"); // open the binary file for reading
     if (file == NULL) {
@@ -331,7 +329,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
     fclose(file);
-    
+
 
     // Run the VM
     while (1) {
@@ -341,7 +339,7 @@ int main(int argc, char *argv[]) {
         }
         bool jump = false;
         // Fetch instruction
-        unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
+        const unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
         
         // Decode instruction
         // printf("PC: %u. ", pc);
@@ -349,7 +347,7 @@ int main(int argc, char *argv[]) {
         // printf("Instruction: ");print_bits(instruction, 32);
         
         // Extract opcode
-        unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
+        const unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
         // printf("Opcode Number: %hhu\n", opcode);
         
         // Execution 
