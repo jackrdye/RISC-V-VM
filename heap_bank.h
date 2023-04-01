@@ -24,7 +24,7 @@ struct node {
     struct node *next;
     unsigned char size;
     bool start;
-    unsigned int *addr;
+    unsigned char *addr;
 };
 typedef struct node Node;
 

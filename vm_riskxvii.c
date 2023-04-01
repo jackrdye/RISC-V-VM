@@ -301,17 +301,13 @@ int main(int argc, char *argv[]) {
         // printf("Please use 1 command line argument");
         exit(1);
     }
-    // printf("%s\n", argv[1]);
 
     // Setup VM architecture 
-    // Note - unsigned char = 1 byte, unsigned int = 4 bytes.
+    // Note - unsigned char = 1 byte, unsigned short = 2 bytes, unsigned int = 4 bytes.
     unsigned char instructions[1024] = {0}; // store 1024 bytes of instructions
     unsigned int registers[32] = { 0 }; // store 32 registers each containing 4 bytes
     unsigned char memory[1024] = { 0 };
-    // unsigned char virtual_routines[256]; 
-    // unsigned char heap_bank[128][64]; // should use linked list!!!
     unsigned short pc = 0;
-    // bool running = true;
 
     // Create Heap Bank
     Node head_node;
