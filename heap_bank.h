@@ -181,7 +181,9 @@ unsigned char store_byte_in_heap(Node *head, unsigned int virtual_address, unsig
     if (current_node->size < index % 64) {
         illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
-    return current_node->addr[index % 64] = byte;
+    // printf("Store to ind")
+    current_node->addr[index % 64] = byte;
+    return 0;
 }
 
 #endif
