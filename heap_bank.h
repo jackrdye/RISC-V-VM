@@ -86,7 +86,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
 
     // Check to see if consecutive bank exists
     if (start_node == NULL) {
-        printf("Start Node == NULL\n");
+        // printf("Start Node == NULL\n");
         return 0;
     }
 
@@ -147,8 +147,9 @@ void free_heap_bank(Node *head, unsigned int *virtual_address, unsigned int *pc,
 }
 
 
-unsigned char read_byte_from_heap(Node *head, unsigned int *virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    unsigned int index = *virtual_address - 0xb700;
+unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    printf("Read from heap at address (%x)\n", virtual_address);
+    unsigned int index = virtual_address - 0xb700;
     if (index > 8192) {
         // Can't be allocated 
         illegal_operation(pc, registers, instruction);

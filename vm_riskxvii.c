@@ -191,14 +191,14 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
             return read_byte_from_heap(head, &address, pc, registers, instruction);
         } else if (num_bytes == 2) {
             return combine_two_bytes(
-                read_byte_from_heap(head, &address, pc, registers, instruction), 
-                read_byte_from_heap(head, &address + 1, pc, registers, instruction)
+                read_byte_from_heap(head, address, pc, registers, instruction), 
+                read_byte_from_heap(head, address + 1, pc, registers, instruction)
                 );
         } else if (num_bytes == 4) {
             return combine_four_bytes(read_byte_from_heap(head, &address, pc, registers, instruction), 
-                read_byte_from_heap(head, &address + 1, pc, registers, instruction), 
-                read_byte_from_heap(head, &address + 2, pc, registers, instruction), 
-                read_byte_from_heap(head, &address + 3, pc, registers, instruction)
+                read_byte_from_heap(head, address + 1, pc, registers, instruction), 
+                read_byte_from_heap(head, address + 2, pc, registers, instruction), 
+                read_byte_from_heap(head, address + 3, pc, registers, instruction)
                 );
         } else {
             printf("Why are you trying to return %d number of bytes from a heap bank?", num_bytes);
