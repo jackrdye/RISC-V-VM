@@ -2,7 +2,9 @@ TARGET = vm_riskxvii
 
 CC = gcc
 
-CFLAGS     = -c -Wall -Wvla -Oz -fno-math-errno -fno-unroll-loops -fno-exceptions -nostartfiles -nodefaultlibs
+CFLAGS     = -c -Wall -Wvla -Oz 
+# -fno-math-errno -fno-unroll-loops -fno-exceptions 
+# -nostartfiles -nodefaultlibs
 # -Wall -Wvla
 # -Wall -Wvla -Werror -O0 -g -std=c11
 # ASAN_FLAGS = -fsanitize=address
