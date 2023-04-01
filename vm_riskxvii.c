@@ -4,16 +4,16 @@
 #include <string.h>
 #include <stdint.h>
 
-// #include <RISK_TYPES.h>
+// #include "heap_bank.h"
 
 #define MAX_INSTRUCTION_BYTES 1024
 #define MAX_REGISTER_BYTES 1024
 
 // Helper functions
-int read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
+short read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
     FILE* file;
-    int size;
-    int size2;
+    short size;
+    short size2;
 
     file = fopen(filename, "rb"); // open the binary file for reading
     if (file == NULL) {
@@ -96,19 +96,19 @@ void register_dump(unsigned int *pc, unsigned int *registers) {
 void not_implemented(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     printf("Instruction Not Implemented: 0x%08x\n", *instruction);
     register_dump(pc, registers);
-    exit(0);
+    exit(1);
 }
 
 // Illegal Operation Helper
 void illegal_operation(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     printf("Illegal Operation: 0x%08x\n", *instruction);
     register_dump(pc, registers);
-    exit(0);
+    exit(1);
 }
 
 // Ensure PC not out of bounds
 bool valid_pc(unsigned int *pc) {
-    if (*pc < 0 || *pc >1024) {
+    if (*pc < 0 || *pc >1020) {
         return false;
     } else {
         return true;
@@ -256,6 +256,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, unsigne
     else if (address == 0x830) {
         // Malloc - Implement linked list
         // Request a chunck of memory with the size of the value being stored 
+        
         // Pointer to the allocated memory (starting address) will be stored in R[28]
         // If the memory cannot be allocated R[28] should be set to 0.
     } 
@@ -428,17 +429,22 @@ int main(int argc, char *argv[]) {
     // unsigned char heap_bank[128][64]; // should use linked list!!!
     unsigned int pc = 0;
     bool running = true;
-    bool jump = false;
+    
 
 
     // Read the instructions from file into the instructions array
-    int instructions_length = read_binary_file(argv[1], instructions, memory);
+    short instructions_length = read_binary_file(argv[1], instructions, memory);
     if (instructions_length == -1) {
-        exit(0);
+        exit(1);
     }
-    int i = 0;
+
     // Run the VM
     while (running) {
+        if (!valid_pc(&pc)) {
+            printf("PC is out of bounds\n");
+            exit(1);
+        }
+        bool jump = false;
         // Fetch instruction
         unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
         
@@ -457,10 +463,22 @@ int main(int argc, char *argv[]) {
             struct RISK_R R = decode_r(instruction);
             if (R.func3 == 0b000 && R.func7 == 0b0000000) {
                 // 1. add
-                store_in_register(registers, R.rd, registers[R.rs1] + registers[R.rs2]);
+                if (registers[R.rs1] > (UINT32_MAX - registers[R.rs2])) {
+                    // Integer Overflow
+                    store_in_register(registers, R.rd, registers[R.rs1] + registers[R.rs2]);
+                    printf("Integer overflow detected in 'add'\n");
+                } else {
+                    store_in_register(registers, R.rd, registers[R.rs1] + registers[R.rs2]);
+                }
             } else if (R.func3 == 0b000 && R.func7 == 0b0100000) {
                 // 3. sub
-                store_in_register(registers, R.rd, registers[R.rs1] - registers[R.rs2]);
+                if (registers[R.rs1] < registers[R.rs2]) {
+                    // Integer Underflow
+                    store_in_register(registers, R.rd, registers[R.rs1] - registers[R.rs2]);
+                    printf("Integer underflow detected in 'sub'\n");
+                } else {
+                    store_in_register(registers, R.rd, registers[R.rs1] - registers[R.rs2]);
+                }
             } else if (R.func3 == 0b100 && R.func7 == 0b0000000) {
                 // 5. xor
                 store_in_register(registers, R.rd, registers[R.rs1] ^ registers[R.rs2]);
@@ -500,7 +518,16 @@ int main(int argc, char *argv[]) {
                 // 2. addi
                 // registers[I.rd] = registers[I.rs1] + I.imm;
                 // Bitfields dont allow memory address, therefore cannot pass a pointer - must pass a copy
-                store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
+                if (I.imm > 0 && registers[I.rs1] > (UINT32_MAX - I.imm)) {
+                    // Integer Overflow
+                    store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
+                    printf("Integer overflow detected in 'addi'\n");
+                } else if (I.imm < 0 && registers[I.rs1] < I.imm) {
+                    store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
+                    // printf("Integer underflow detected in 'addi'\n");
+                } else {
+                    store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
+                }
             } else if (I.func3 == 0b100) {
                 // 6. xori
                 store_in_register(registers, I.rd, registers[I.rs1] ^ I.imm);
@@ -713,10 +740,6 @@ int main(int argc, char *argv[]) {
         } else {
             pc += 4;
         }
-        // if (pc > 36 || i > 11) {
-        //     break;
-        // }
-        i++;
     }
 
 
