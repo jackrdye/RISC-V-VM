@@ -149,7 +149,7 @@ void free_heap_bank(Node *head, unsigned int virtual_address, unsigned int *pc, 
 
 
 unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    // printf("Read from heap at address (%x)\n", virtual_address);
+    printf("Read from heap at address (%x)\n", virtual_address);
     unsigned int index = virtual_address - 0xb700;
     if (index > 8192) {
         // Can't be allocated 
@@ -166,8 +166,8 @@ unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsi
     return current_node->addr[index % 64];
 }
 
-unsigned char store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Write to heap at address (%x)\n", virtual_address);
+void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    printf("Write to heap at address (%x) - Byte(%x)\n", virtual_address, byte);
     unsigned int index = virtual_address - 0xb700;
     if (index > 8191) {
         // Can't be allocated 
@@ -183,7 +183,7 @@ unsigned char store_byte_in_heap(Node *head, unsigned int virtual_address, unsig
     }
     // printf("Store to ind")
     // current_node->addr[index % 64] = byte;
-    return 0;
+    
 }
 
 #endif
