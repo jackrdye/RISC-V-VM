@@ -17,7 +17,7 @@ void read_binary_file(const char* filename, unsigned char *instructions, unsigne
     if (file == NULL) {
         perror("Error opening file");
         exit(1);
-        return -1;
+        // return -1;
     }
 
     // read up to MAX_BYTES bytes from the file into the buffer
