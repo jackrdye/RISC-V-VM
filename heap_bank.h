@@ -167,7 +167,7 @@ unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsi
 }
 
 unsigned char store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    // printf("Write to heap at address (%x)\n", virtual_address);
+    printf("Write to heap at address (%x)\n", virtual_address);
     unsigned int index = virtual_address - 0xb700;
     if (index > 8192) {
         // Can't be allocated 
