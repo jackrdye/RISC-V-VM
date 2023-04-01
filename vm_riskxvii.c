@@ -6,8 +6,6 @@
 
 #include "heap_bank.h"
 
-#define MAX_INSTRUCTION_BYTES 1024
-#define MAX_REGISTER_BYTES 1024
 
 // Helper functions
 short read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
@@ -22,7 +20,7 @@ short read_binary_file(const char* filename, unsigned char *instructions, unsign
     }
 
     // read up to MAX_BYTES bytes from the file into the buffer
-    size = fread(instructions, 1, MAX_INSTRUCTION_BYTES, file);
+    size = fread(instructions, 1, 1024, file);
     if (ferror(file)) {
         perror("Error reading file");
         size = -1;
