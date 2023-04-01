@@ -479,8 +479,8 @@ int main(int argc, char *argv[]) {
         unsigned int instruction = combine_four_bytes(instructions[pc], instructions[pc+1], instructions[pc+2], instructions[pc+3]);
         
         // Decode instruction
-        printf("PC: %u. ", pc);
-        printf("Register 14 = (%u), Register 15 = (%u). ", registers[14], registers[15]);
+        // printf("PC: %u. ", pc);
+        // printf("Register 14 = (%u), Register 15 = (%u). ", registers[14], registers[15]);
         // printf("Instruction: ");print_bits(instruction, 32);
         
         // Extract opcode

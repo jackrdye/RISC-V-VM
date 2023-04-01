@@ -178,7 +178,7 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
     for (int i = 0; i < heap_bank_num; i++) {
         current_node = current_node->next;
     }
-    if (current_node->size-1 > index % 64) {
+    if (current_node->size-1 < index % 64) {
         // This is being triggered early!
         illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
