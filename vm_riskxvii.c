@@ -109,7 +109,7 @@ void not_implemented(unsigned int *pc, unsigned int *registers, unsigned int *in
 // }
 
 // Ensure PC not out of bounds
-bool valid_pc(unsigned int *pc) {
+bool valid_pc(unsigned short *pc) {
     if (*pc < 0 || *pc >1020) {
         return false;
     } else {
@@ -588,7 +588,7 @@ int main(int argc, char *argv[]) {
             // 33. jalr
             store_in_register(registers, I.rd, pc + 4);
             // print_register(registers, 1);
-            unsigned int new_pc = registers[I.rs1] + I.imm;
+            unsigned short new_pc = registers[I.rs1] + I.imm;
             // printf("\nNEW PC=(%u)\n", new_pc);
             if (new_pc < 0 || new_pc > 1019) {
                 // Throw error - setting pc to a value which exceeds instruction memory
@@ -668,7 +668,7 @@ int main(int argc, char *argv[]) {
             if (SB.func3 == 0b000) {
                 // 26. beq
                 if (registers[SB.rs1] == registers[SB.rs2]) {
-                    unsigned int new_pc = pc + SB.imm;
+                    unsigned short new_pc = pc + SB.imm;
                     if (valid_pc(&new_pc)) {
                         pc = new_pc;
                         jump = true;
@@ -679,7 +679,7 @@ int main(int argc, char *argv[]) {
             } else if (SB.func3 == 0b001) {
                 // 27. bne
                 if (registers[SB.rs1] != registers[SB.rs2]) {
-                    unsigned int new_pc = pc + SB.imm;
+                    unsigned short new_pc = pc + SB.imm;
                     if (valid_pc(&new_pc)) {
                         pc = new_pc;
                         jump = true;
@@ -690,7 +690,7 @@ int main(int argc, char *argv[]) {
             } else if (SB.func3 == 0b100) {
                 // 28. blt
                 if (registers[SB.rs1] < registers[SB.rs2]) {
-                    unsigned int new_pc = pc + SB.imm;
+                    unsigned short new_pc = pc + SB.imm;
                     if (valid_pc(&new_pc)) {
                         pc = new_pc;
                         jump = true;
@@ -701,7 +701,7 @@ int main(int argc, char *argv[]) {
             } else if (SB.func3 == 0b110) {
                 // 29. bltu
                 if (((unsigned int) registers[SB.rs1]) < ((unsigned int) registers[SB.rs2])) {
-                    unsigned int new_pc = pc + SB.imm;
+                    unsigned short new_pc = pc + SB.imm;
                     if (valid_pc(&new_pc)) {
                         pc = new_pc;
                         jump = true;
@@ -712,7 +712,7 @@ int main(int argc, char *argv[]) {
             } else if (SB.func3 == 0b101) {
                 // 30. bge
                 if (registers[SB.rs1] >= registers[SB.rs2]) {
-                    unsigned int new_pc = pc + SB.imm;
+                    unsigned short new_pc = pc + SB.imm;
                     if (valid_pc(&new_pc)) {
                         pc = new_pc;
                         jump = true;
@@ -723,7 +723,7 @@ int main(int argc, char *argv[]) {
             } else if (SB.func3 == 0b111) {
                 // 31. bgeu
                 if (((unsigned int) registers[SB.rs1]) >= ((unsigned int) registers[SB.rs2])) {
-                    unsigned int new_pc = pc + SB.imm;
+                    unsigned short new_pc = pc + SB.imm;
                     if (valid_pc(&new_pc)) {
                         pc = new_pc;
                         jump = true;
@@ -750,7 +750,7 @@ int main(int argc, char *argv[]) {
             struct RISK_UJ UJ = decode_uj(instruction);
             // 32. jal
             store_in_register(registers, UJ.rd, pc + 4);
-            unsigned int new_pc = pc + UJ.imm;
+            unsigned short new_pc = pc + UJ.imm;
             if (valid_pc(&new_pc)) {
                 pc = pc + UJ.imm;
             } else {
