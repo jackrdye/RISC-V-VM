@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <stdint.h>
+// #include <stdint.h>
 
 #include "heap_bank.h"
-
+#include "riscv_types.h"
 
 // Helper functions
 void read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
@@ -48,21 +48,6 @@ void read_binary_file(const char* filename, unsigned char *instructions, unsigne
 // }
 
 
-unsigned int combine_four_bytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4) {
-    unsigned int instruction = 0;
-    instruction |= (unsigned int)b1;
-    instruction |= (unsigned int)b2 << 8;
-    instruction |= (unsigned int)b3 << 16;
-    instruction |= (unsigned int)b4 << 24;
-    return instruction;
-}
-uint16_t combine_two_bytes(unsigned char b1, unsigned char b2) {
-    uint16_t instruction = 0;
-    instruction |= (unsigned int)b1;
-    instruction |= (unsigned int)b2 << 8;
-    return instruction;
-}
-
 // void print_bits(unsigned int instruction, unsigned int length) {
 //     for (int i = length - 1; i >= 0; i--) {
 //         printf("%c", (instruction & (1 << i)) ? '1' : '0');
@@ -86,6 +71,21 @@ uint16_t combine_two_bytes(unsigned char b1, unsigned char b2) {
 //     }
 // }
 
+
+unsigned int combine_four_bytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4) {
+    unsigned int instruction = 0;
+    instruction |= (unsigned int)b1;
+    instruction |= (unsigned int)b2 << 8;
+    instruction |= (unsigned int)b3 << 16;
+    instruction |= (unsigned int)b4 << 24;
+    return instruction;
+}
+unsigned short combine_two_bytes(unsigned char b1, unsigned char b2) {
+    unsigned short instruction = 0;
+    instruction |= (unsigned int)b1;
+    instruction |= (unsigned int)b2 << 8;
+    return instruction;
+}
 
 // Instruction not Implemented Helper
 void not_implemented(unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
@@ -296,139 +296,6 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
 
 
 
-// RiskV Type structs - Use bitfields to optimise memory
-// Decode Instructions & Load into struct
-// Type R
-struct RISK_R {
-    unsigned int func7 : 7;
-    unsigned int rs2 : 5;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
-};
-struct RISK_R decode_r(unsigned int instruction) {
-    struct RISK_R r;
-    r.opcode = instruction & 0b1111111;
-    r.rd = (instruction >> 7) & 0b11111;
-    r.func3 = (instruction >> 12) & 0b111;
-    r.rs1 = (instruction >> 15) & 0b11111;
-    r.rs2 = (instruction >> 20) & 0b11111;
-    r.func7 = (instruction >> 25) & 0b111;
-    return r;
-}
-
-// Type I
-struct RISK_I {
-    int imm : 12;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
-};
-struct RISK_I decode_i(unsigned int instruction) {
-    struct RISK_I i;
-    i.opcode = instruction & 0b1111111;
-    i.rd = (instruction >> 7) & 0b11111;
-    i.func3 = (instruction >> 12) & 0b111;
-    i.rs1 = (instruction >> 15) & 0b11111;
-    i.imm = (instruction >> 20) & 0b111111111111;
-    
-    // // Sign extension
-    // if (i.imm & (1 < 11)) {
-    //     i.imm |= 0xFFFFF000;
-    // }
-    // printf("I func3 = (%u)\n", i.func3);
-
-
-    return i;
-}
-
-// Type S
-struct RISK_S {
-    int imm : 12;
-    unsigned int rs2 : 5;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int opcode : 7;
-};
-struct RISK_S decode_s(unsigned int instruction) {
-    struct RISK_S s;
-    s.opcode = instruction & 0b1111111;
-    s.func3 = (instruction >> 12) & 0b111;
-    s.rs1 = (instruction >> 15) & 0b11111;
-    s.rs2 = (instruction >> 20) & 0b11111;
-    unsigned int imm4_0 = ((instruction >> 7) & 0b11111);
-    unsigned int imm11_5 = ((instruction >> 25) & 0b1111111) ;
-    s.imm = (imm11_5 << 5) | imm4_0;
-
-    return s;
-}
-
-// Type SB
-struct RISK_SB {
-    int imm : 13;
-    unsigned int rs2 : 5;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int opcode : 7;
-};
-struct RISK_SB decode_sb(unsigned int instruction) {
-    struct RISK_SB sb;
-    sb.opcode = instruction & 0b1111111;
-    sb.func3 = (instruction >> 12) & 0b111;
-    sb.rs1 = (instruction >> 15) & 0b11111;
-    sb.rs2 = (instruction >> 20) & 0b11111;
-    unsigned int imm11 = (instruction >> 7) & 0b1;
-    unsigned int imm4_1 = (instruction >> 8) & 0b1111; // before 0x1E
-    unsigned int imm10_5 = (instruction >> 25) & 0b111111; // Before 0x7F0
-    unsigned int imm12 = (instruction >> 31) & 0b1;
-    sb.imm = ((imm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | imm4_1 << 1);
-    // printf("SB IMM = (%d)\n", sb.imm);
-    // print_bits(sb.imm, 13);
-    return sb;
-}
-
-// Type U
-struct RISK_U {
-    unsigned int imm : 32;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
-};
-struct RISK_U decode_u(unsigned int instruction) {
-    struct RISK_U u;
-    u.opcode = instruction & 0b1111111;
-    u.rd = (instruction >> 7) & 0b11111;
-    u.imm = (instruction) & 0xFFFFF000; // Bits 31-12
-    
-    return u;
-}
-
-// Type UJ
-struct RISK_UJ {
-    int imm : 21;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
-};
-struct RISK_UJ decode_uj(unsigned int instruction) {
-    struct RISK_UJ uj;
-    uj.opcode = instruction & 0b1111111;
-    uj.rd = (instruction >> 7) & 0b11111;
-    unsigned int imm20 = (instruction >> 31) & 0b1;
-    unsigned int imm10_1 = (instruction >> 21) & 0b1111111111;
-    unsigned int imm11 = (instruction >> 20) & 0b1;
-    unsigned int imm19_12 = (instruction >> 12) & 0b11111111;
-
-    int imm = ((imm20 << 20) | (imm19_12 << 12) | (imm11 << 11) | (imm10_1 << 1));
-
-    uj.imm = imm;
-    // printf("unsigned (%u), signed (%d): ", uj.imm, uj.imm);
-    // print_bits(uj.imm, 21);
-    return uj;
-}
-
-
-
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         // printf("Please use 1 command line argument");
@@ -484,7 +351,7 @@ int main(int argc, char *argv[]) {
             struct RISK_R R = decode_r(instruction);
             if (R.func3 == 0b000 && R.func7 == 0b0000000) {
                 // 1. add
-                if (registers[R.rs1] > (UINT32_MAX - registers[R.rs2])) {
+                if (registers[R.rs1] > (__UINT32_MAX__ - registers[R.rs2])) {
                     // Integer Overflow
                     store_in_register(registers, R.rd, registers[R.rs1] + registers[R.rs2]);
                     // printf("Integer overflow detected in 'add'\n");
@@ -539,7 +406,7 @@ int main(int argc, char *argv[]) {
                 // 2. addi
                 // registers[I.rd] = registers[I.rs1] + I.imm;
                 // Bitfields dont allow memory address, therefore cannot pass a pointer - must pass a copy
-                if (I.imm > 0 && registers[I.rs1] > (UINT32_MAX - I.imm)) {
+                if (I.imm > 0 && registers[I.rs1] > (__UINT32_MAX__ - I.imm)) {
                     // Integer Overflow
                     store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
                     // printf("Integer overflow detected in 'addi'\n");
@@ -597,7 +464,7 @@ int main(int argc, char *argv[]) {
             } else if (I.func3 == 0b001) {
                 // 15. lh
                 unsigned int address = registers[I.rs1] + I.imm;
-                uint16_t value_in_memory = read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction);
+                unsigned short value_in_memory = read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
             } else if (I.func3 == 0b010) {
                 // 16. lw
@@ -611,13 +478,13 @@ int main(int argc, char *argv[]) {
             } else if (I.func3 == 0b100) {
                 // 17. lbu
                 unsigned int address = registers[I.rs1] + I.imm;
-                unsigned char value_in_memory = read_memory(memory, instructions, head, address, 1, &pc, registers, &instruction);
-                store_in_register(registers, I.rd, value_in_memory);
+                // unsigned char value_in_memory = read_memory(memory, instructions, head, address, 1, &pc, registers, &instruction);
+                store_in_register(registers, I.rd, read_memory(memory, instructions, head, address, 1, &pc, registers, &instruction));
             } else if (I.func3 == 0b101) {
                 // 18. lhu
                 unsigned int address = registers[I.rs1] + I.imm;
-                uint16_t value_in_memory = read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction);
-                store_in_register(registers, I.rd, value_in_memory);
+                // unsigned short value_in_memory = read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction);
+                store_in_register(registers, I.rd, read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction));
             } else {
                 // func3 not detected -  not implemented
                 // printf("No func3 detected ?? Func 3 = (%u)\n", I.func3);
