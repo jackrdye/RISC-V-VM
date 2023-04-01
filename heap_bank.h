@@ -148,7 +148,7 @@ void free_heap_bank(Node *head, unsigned int virtual_address, unsigned short *pc
 }
 
 
-unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     // printf("Read from heap at address (%x)\n", virtual_address);
     unsigned int index = virtual_address - 0xb700;
     if (index > 8192) {
@@ -166,7 +166,7 @@ unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsi
     return current_node->addr[index % 64];
 }
 
-void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     // printf("Write to heap at address (%x) - Byte(%x)\n", virtual_address, byte);
     unsigned int index = virtual_address - 0xB700;
     if (index > 8191) {
