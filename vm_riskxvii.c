@@ -149,12 +149,6 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
             illegal_operation(pc, registers, instruction);
         }
     } 
-    // else if (address > 0x8FF) {
-    //     // Exceeds Memory & Virtual Routine bounds
-    //     // Illegal operation
-    //     printf("Exceeds memory bounds\n");
-    //     illegal_operation(pc, registers, instruction);
-    // }
 
     // -------------------Virtual Routines-------------------------
     else if (address == 0x0812) {
@@ -297,11 +291,11 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         store_byte_in_heap(head, address, (unsigned char) value, pc, registers, instruction);
         
         if (num_bytes >= 2) {
-            store_byte_in_heap(head, address, (unsigned char) (value >> 8), pc, registers, instruction);
+            store_byte_in_heap(head, address+1, (unsigned char) (value >> 8), pc, registers, instruction);
         } 
         if (num_bytes >= 4) {
-            store_byte_in_heap(head, address, (unsigned char) (value >> 16), pc, registers, instruction);
-            store_byte_in_heap(head, address, (unsigned char) (value >> 24), pc, registers, instruction);
+            store_byte_in_heap(head, address+2, (unsigned char) (value >> 16), pc, registers, instruction);
+            store_byte_in_heap(head, address+3, (unsigned char) (value >> 24), pc, registers, instruction);
         }
     }
     else {
