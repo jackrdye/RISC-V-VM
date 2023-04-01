@@ -27,11 +27,11 @@ struct RISK_R decode_r(unsigned int instruction) {
 
 // Type I
 struct RISK_I {
-    int imm : 12;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
+    short imm : 12;
+    unsigned char rs1 : 5;
+    unsigned char func3 : 3;
+    unsigned char rd : 5;
+    unsigned char opcode : 7;
 };
 struct RISK_I decode_i(unsigned int instruction) {
     struct RISK_I i;
@@ -46,11 +46,11 @@ struct RISK_I decode_i(unsigned int instruction) {
 
 // Type S
 struct RISK_S {
-    int imm : 12;
-    unsigned int rs2 : 5;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int opcode : 7;
+    short imm : 12;
+    unsigned char rs2 : 5;
+    unsigned char rs1 : 5;
+    unsigned char func3 : 3;
+    unsigned char opcode : 7;
 };
 struct RISK_S decode_s(unsigned int instruction) {
     struct RISK_S s;
@@ -58,8 +58,8 @@ struct RISK_S decode_s(unsigned int instruction) {
     s.func3 = (instruction >> 12) & 0b111;
     s.rs1 = (instruction >> 15) & 0b11111;
     s.rs2 = (instruction >> 20) & 0b11111;
-    unsigned int imm4_0 = ((instruction >> 7) & 0b11111);
-    unsigned int imm11_5 = ((instruction >> 25) & 0b1111111) ;
+    unsigned short imm4_0 = ((instruction >> 7) & 0b11111);
+    unsigned short imm11_5 = ((instruction >> 25) & 0b1111111) ;
     s.imm = (imm11_5 << 5) | imm4_0;
 
     return s;
@@ -67,11 +67,11 @@ struct RISK_S decode_s(unsigned int instruction) {
 
 // Type SB
 struct RISK_SB {
-    int imm : 13;
-    unsigned int rs2 : 5;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int opcode : 7;
+    short imm : 13;
+    unsigned short rs2 : 5;
+    unsigned short rs1 : 5;
+    unsigned short func3 : 3;
+    unsigned short opcode : 7;
 };
 struct RISK_SB decode_sb(unsigned int instruction) {
     struct RISK_SB sb;
@@ -79,10 +79,10 @@ struct RISK_SB decode_sb(unsigned int instruction) {
     sb.func3 = (instruction >> 12) & 0b111;
     sb.rs1 = (instruction >> 15) & 0b11111;
     sb.rs2 = (instruction >> 20) & 0b11111;
-    unsigned int imm11 = (instruction >> 7) & 0b1;
-    unsigned int imm4_1 = (instruction >> 8) & 0b1111; // before 0x1E
-    unsigned int imm10_5 = (instruction >> 25) & 0b111111; // Before 0x7F0
-    unsigned int imm12 = (instruction >> 31) & 0b1;
+    unsigned short imm11 = (instruction >> 7) & 0b1;
+    unsigned short imm4_1 = (instruction >> 8) & 0b1111; // before 0x1E
+    unsigned short imm10_5 = (instruction >> 25) & 0b111111; // Before 0x7F0
+    unsigned short imm12 = (instruction >> 31) & 0b1;
     sb.imm = ((imm12 << 12) | (imm11 << 11) | (imm10_5 << 5) | imm4_1 << 1);
     
     return sb;
