@@ -31,12 +31,12 @@ typedef struct node Node;
 Node* create_heap_bank(Node *head) {
     Node *current_node = head;
     for (int i = 0; i < 128; i++) {
-        // current_node->addr = NULL;
+        current_node->addr = NULL;
         current_node->size = 0;
         current_node->start = 0;
         if (i != 127) {
-            Node new_node;
-            current_node->next = &new_node;
+            Node* new_node = (Node*)malloc(sizeof(Node));
+            current_node->next = new_node;
             current_node = current_node->next;
         } else {
             current_node->next = NULL;
