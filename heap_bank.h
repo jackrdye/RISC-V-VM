@@ -101,11 +101,11 @@ unsigned int allocate(Node *head, unsigned int bytes_to_allocate) {
     return start_heap_bank_index*64;
 }
 
-void free_heap_bank(Node *head, unsigned int *virtual_address) {
+void free_heap_bank(Node *head, unsigned int *virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     unsigned int index = *virtual_address - 0xb700;
     // If index to free is not the 1st byte of a block it cannot be freed
     if (index % 64 != 0) {
-        // illegal_operation();
+        illegal_operation(pc, registers, instruction);
     }
     // Check if index supplied is the 1st byte of a start block
     Node *current_node = head;
@@ -116,7 +116,7 @@ void free_heap_bank(Node *head, unsigned int *virtual_address) {
     }
     // Check if node is the start of a block
     if (current_node->start == 0) {
-        // illegal_operation();
+        illegal_operation(pc, registers, instruction);
     } 
 
     // Free block
