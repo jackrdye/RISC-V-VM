@@ -55,7 +55,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
     unsigned short start_heap_bank_index = -1;
     short num_banks = 0;
     for (int i = 0; i < 128; i++) {
-        printf("Bank %d size: (%u)", i, current_node->size);
+        printf("Bank %d size: (%u)\n", i, current_node->size);
         if (current_node->size != 0) { 
             // Bank Occupied
             num_banks = 0;
@@ -65,6 +65,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
         } else if (current_node->size == 0) {
             // Bank Unoccupied
             num_banks += 1;
+            printf("Required Banks = (%d). Number of consecutive Banks = (%d)\n", required_banks, num_banks);
             if (num_banks == required_banks) {
                 break;
             } else {
