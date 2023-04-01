@@ -5,6 +5,21 @@
 #ifndef HEAP_BANK_H
 #define HEAP_BANK_H
 
+// Register Dump
+void register_dump(unsigned int *pc, unsigned int *registers) {
+    printf("PC = 0x%08x;\n", *pc);
+    for (int i = 0; i < 32; i ++) {
+        printf("R[%d] = 0x%08x;\n", i, registers[i]);
+    }
+}
+
+
+void illegal_operation(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    printf("Illegal Operation: 0x%08x\n", *instruction);
+    register_dump(pc, registers);
+    exit(1);
+}
+
 struct node {
     struct node *next;
     unsigned char *addr;
@@ -12,6 +27,24 @@ struct node {
     bool start;
 };
 typedef struct node Node;
+
+Node* create_heap_bank(Node *head) {
+    Node *current_node = head;
+    for (int i = 0; i < 128; i++) {
+        current_node->addr = NULL;
+        current_node->size = 0;
+        current_node->start = 0;
+        if (i != 127) {
+            Node new_node;
+            current_node->next = &new_node;
+            current_node = current_node->next;
+        } else {
+            current_node->next = NULL;
+        }
+    }
+    return head;
+}
+
 
 // Returns the virtual address of 1st byte
 unsigned int allocate(Node *head, unsigned int bytes_to_allocate) {
@@ -68,8 +101,8 @@ unsigned int allocate(Node *head, unsigned int bytes_to_allocate) {
     return start_heap_bank_index*64;
 }
 
-void free_heap_bank(Node *head, unsigned int virtual_address) {
-    unsigned int index = virtual_address - 0xb700;
+void free_heap_bank(Node *head, unsigned int *virtual_address) {
+    unsigned int index = *virtual_address - 0xb700;
     // If index to free is not the 1st byte of a block it cannot be freed
     if (index % 64 != 0) {
         // illegal_operation();
@@ -98,21 +131,21 @@ void free_heap_bank(Node *head, unsigned int virtual_address) {
 }
 
 
-unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address) {
-    unsigned int index = virtual_address - 0xb700;
+unsigned char read_byte_from_heap(Node *head, unsigned int *virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    unsigned int index = *virtual_address - 0xb700;
     unsigned short heap_bank_num = index / 64;
     Node *current_node = head;
     for (int i = 0; i < heap_bank_num; i++) {
         current_node = current_node->next;
     }
     if (current_node->size < index % 64) {
-        // illegal_operation();
+        illegal_operation(pc, registers, instruction);
     }
     return current_node->addr[index % 64];
 }
 
-unsigned char store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte) {
-    unsigned int index = virtual_address - 0xb700;
+unsigned char store_byte_in_heap(Node *head, unsigned int *virtual_address, unsigned char byte) {
+    unsigned int index = *virtual_address - 0xb700;
     unsigned short heap_bank_num = index / 64;
     Node *current_node = head;
     for (int i = 0; i < heap_bank_num; i++) {
