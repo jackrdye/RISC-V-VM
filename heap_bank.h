@@ -149,7 +149,7 @@ void free_heap_bank(Node *head, unsigned int virtual_address, unsigned int *pc, 
 
 
 unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Read from heap at address (%x)\n", virtual_address);
+    // printf("Read from heap at address (%x)\n", virtual_address);
     unsigned int index = virtual_address - 0xb700;
     if (index > 8192) {
         // Can't be allocated 
@@ -178,7 +178,7 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
     for (int i = 0; i < heap_bank_num; i++) {
         current_node = current_node->next;
     }
-    if (current_node->size-1 < index % 64) {
+    if (current_node->size < index % 64) {
         // This is being triggered early!
         illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
