@@ -72,6 +72,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
 
     // Check to see if consecutive bank exists
     if (start_node == NULL) {
+        printf("Start Node == NULL...\n");
         return 0;
     }
 
