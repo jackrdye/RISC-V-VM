@@ -445,8 +445,20 @@ int main(int argc, char *argv[]) {
 
     // Create Heap Bank
     Node head_node;
-    Node *head = create_heap_bank(&head_node);
-
+    Node *current_node = &head_node;
+    for (int i = 0; i < 128; i++) {
+        current_node->addr = NULL;
+        current_node->size = 0;
+        current_node->start = 0;
+        if (i != 127) {
+            Node new_node;
+            current_node->next = &new_node;
+            current_node = current_node->next;
+        } else {
+            current_node->next = NULL;
+        }
+    }
+    Node *head = &head_node;
 
     // Read the instructions from file into the instructions array
     short instructions_length = read_binary_file(argv[1], instructions, memory);
