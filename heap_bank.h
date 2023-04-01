@@ -22,9 +22,9 @@ void illegal_operation(unsigned short *pc, unsigned int *registers, unsigned int
 
 struct node {
     struct node *next;
-    unsigned char *addr;
-    unsigned short size;
+    unsigned char size;
     bool start;
+    unsigned int *addr;
 };
 typedef struct node Node;
 
