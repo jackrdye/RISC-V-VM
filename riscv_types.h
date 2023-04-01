@@ -91,8 +91,8 @@ struct RISK_SB decode_sb(unsigned int instruction) {
 // Type U
 struct RISK_U {
     unsigned int imm : 32;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
+    unsigned char rd : 5;
+    unsigned char opcode : 7;
 };
 struct RISK_U decode_u(unsigned int instruction) {
     struct RISK_U u;
@@ -106,8 +106,8 @@ struct RISK_U decode_u(unsigned int instruction) {
 // Type UJ
 struct RISK_UJ {
     int imm : 21;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
+    unsigned char rd : 5;
+    unsigned char opcode : 7;
 };
 struct RISK_UJ decode_uj(unsigned int instruction) {
     struct RISK_UJ uj;
