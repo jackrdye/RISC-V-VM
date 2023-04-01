@@ -38,12 +38,12 @@ short read_binary_file(const char* filename, unsigned char *instructions, unsign
 }
 
 
-void print_buffer(unsigned char* buffer, int size) {
-    for (int i = 0; i < size / 4; i++) {
-        printf("%02x ", buffer[i]); // print each byte as a two-digit hexadecimal value
-    }
-    printf("\n");
-}
+// void print_buffer(unsigned char* buffer, int size) {
+//     for (int i = 0; i < size / 4; i++) {
+//         printf("%02x ", buffer[i]); // print each byte as a two-digit hexadecimal value
+//     }
+//     printf("\n");
+// }
 
 
 unsigned int combine_four_bytes(unsigned char b1, unsigned char b2, unsigned char b3, unsigned char b4) {
@@ -61,28 +61,28 @@ uint16_t combine_two_bytes(unsigned char b1, unsigned char b2) {
     return instruction;
 }
 
-void print_bits(unsigned int instruction, unsigned int length) {
-    for (int i = length - 1; i >= 0; i--) {
-        printf("%c", (instruction & (1 << i)) ? '1' : '0');
-    }
-    printf("\n");
-}
+// void print_bits(unsigned int instruction, unsigned int length) {
+//     for (int i = length - 1; i >= 0; i--) {
+//         printf("%c", (instruction & (1 << i)) ? '1' : '0');
+//     }
+//     printf("\n");
+// }
 
-void print_registers(unsigned int registers[32]) {
-    for (int i = 0; i < 32; i++) {
-        printf("Register %d: %u\n", i, registers[i]);
-    }
-}
+// void print_registers(unsigned int registers[32]) {
+//     for (int i = 0; i < 32; i++) {
+//         printf("Register %d: %u\n", i, registers[i]);
+//     }
+// }
 
-void print_register(unsigned int registers[32], unsigned int i) {
-    printf("Register %d: %u\n", i, registers[i]);
-}
+// void print_register(unsigned int registers[32], unsigned int i) {
+//     printf("Register %d: %u\n", i, registers[i]);
+// }
 
-void print_memory(unsigned char memory[1024]) {
-    for (int i = 0; i < 1024; i += 4) {
-        printf("Byte: %d -- %02x %02x %02x %02x\n", i, memory[i], memory[i+1], memory[i+2], memory[i+3]);
-    }
-}
+// void print_memory(unsigned char memory[1024]) {
+//     for (int i = 0; i < 1024; i += 4) {
+//         printf("Byte: %d -- %02x %02x %02x %02x\n", i, memory[i], memory[i+1], memory[i+2], memory[i+3]);
+//     }
+// }
 
 // // Register Dump
 // void register_dump(unsigned int *pc, unsigned int *registers) {
@@ -176,7 +176,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         } else if (num_bytes == 4) {
             return combine_four_bytes(memory[address], memory[address+1], memory[address+2], memory[address+3]);
         } else {
-            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
+            // printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
         }
     // ------------------------ Heap Banks --------------------------
@@ -195,7 +195,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
                 read_byte_from_heap(head, address + 3, pc, registers, instruction) 
                 );
         } else {
-            printf("Why are you trying to return %d number of bytes from a heap bank?", num_bytes);
+            // printf("Why are you trying to return %d number of bytes from a heap bank?", num_bytes);
             illegal_operation(pc, registers, instruction);
         }
     } else {
@@ -203,7 +203,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         // Not implemented - Call to unimplemented Virtual Routine
         not_implemented(pc, registers, instruction);
     }
-    printf("Shouldn't hit this - end of read memory\n");
+    // printf("Shouldn't hit this - end of read memory\n");
     return -1;
 }
 
@@ -213,13 +213,13 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
     if (address < 0x0400) {
         // Throw error, Cannot overwrite instruction memory 
         // Illegal operation
-        printf("Can't write to instructions\n");
+        // printf("Can't write to instructions\n");
         illegal_operation(pc, registers, instruction);
     } 
     else if (address > 0x8FF && address < 0xB700) {
         // Exceeds Memory & Virtual Routine bounds
         // Illegal operation
-        printf("Exceeds memory bounds\n");
+        // printf("Exceeds memory bounds\n");
         illegal_operation(pc, registers, instruction);
     }
 
