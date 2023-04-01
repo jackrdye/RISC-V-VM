@@ -209,7 +209,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
 
 // Store in memory helper
 void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("PC=%u --- Write to (%x)\n", *pc, address);
+    // printf("PC=%u --- Write to (%x)\n", *pc, address);
     if (address < 0x0400) {
         // Throw error, Cannot overwrite instruction memory 
         // Illegal operation
