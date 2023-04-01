@@ -2,7 +2,8 @@ TARGET = vm_riskxvii
 
 CC = gcc
 
-CFLAGS     = -c -Wall -Wvla -Os -m32
+CFLAGS     = -c -Wall -Wvla -Os 
+# -m32
 # -fno-math-errno -fno-unroll-loops -fno-exceptions 
 # -nostartfiles -nodefaultlibs
 # -Wall -Wvla
