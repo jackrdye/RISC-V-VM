@@ -149,12 +149,12 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
             illegal_operation(pc, registers, instruction);
         }
     } 
-    else if (address > 0x8FF) {
-        // Exceeds Memory & Virtual Routine bounds
-        // Illegal operation
-        printf("Exceeds memory bounds\n");
-        illegal_operation(pc, registers, instruction);
-    }
+    // else if (address > 0x8FF) {
+    //     // Exceeds Memory & Virtual Routine bounds
+    //     // Illegal operation
+    //     printf("Exceeds memory bounds\n");
+    //     illegal_operation(pc, registers, instruction);
+    // }
 
     // -------------------Virtual Routines-------------------------
     else if (address == 0x0812) {
