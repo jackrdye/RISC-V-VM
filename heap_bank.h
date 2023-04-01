@@ -65,7 +65,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
             num_banks = 0;
             current_node = current_node->next;
             start_node = &*(current_node); // set to pointer to underlying Node not the current_node pointer
-            start_heap_bank_index = i;
+            start_heap_bank_index = i+1;
         } else if (current_node->size == 0) {
             // Bank Unoccupied
             num_banks += 1;
