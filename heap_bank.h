@@ -183,7 +183,7 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
         illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
     // printf("Store to ind")
-    // current_node->addr[index % 64] = byte;
+    current_node->addr[index % 64] = byte;
     
 }
 
