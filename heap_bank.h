@@ -165,8 +165,8 @@ unsigned char read_byte_from_heap(Node *head, unsigned int virtual_address, unsi
     return current_node->addr[index % 64];
 }
 
-unsigned char store_byte_in_heap(Node *head, unsigned int *virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    unsigned int index = *virtual_address - 0xb700;
+unsigned char store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
+    unsigned int index = virtual_address - 0xb700;
     if (index > 8192) {
         // Can't be allocated 
         illegal_operation(pc, registers, instruction);

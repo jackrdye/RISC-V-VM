@@ -294,14 +294,14 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
     // ---------------------- Heap Banks ----------------------
     else if (address >= 0xB700) {
         
-        store_byte_in_heap(head, &address, (unsigned char) value, pc, registers, instruction);
+        store_byte_in_heap(head, address, (unsigned char) value, pc, registers, instruction);
         
         if (num_bytes >= 2) {
-            store_byte_in_heap(head, &address, (unsigned char) (value >> 8), pc, registers, instruction);
+            store_byte_in_heap(head, address, (unsigned char) (value >> 8), pc, registers, instruction);
         } 
         if (num_bytes >= 4) {
-            store_byte_in_heap(head, &address, (unsigned char) (value >> 16), pc, registers, instruction);
-            store_byte_in_heap(head, &address, (unsigned char) (value >> 24), pc, registers, instruction);
+            store_byte_in_heap(head, address, (unsigned char) (value >> 16), pc, registers, instruction);
+            store_byte_in_heap(head, address, (unsigned char) (value >> 24), pc, registers, instruction);
         }
     }
     else {
