@@ -67,6 +67,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
             num_banks += 1;
             printf("Required Banks = (%d). Number of consecutive Banks = (%d)\n", required_banks, num_banks);
             if (num_banks == required_banks) {
+                printf("Start Node size = (%d), start = (%d)\n", start_node->size, start_node->start);
                 break;
             } else {
                 current_node = current_node->next;
@@ -76,7 +77,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
 
     // Check to see if consecutive bank exists
     if (start_node == NULL) {
-        printf("Start Node == NULL...\n");
+        printf("Start Node == NULL\n");
         return 0;
     }
 
