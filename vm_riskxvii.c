@@ -347,7 +347,7 @@ int main(int argc, char *argv[]) {
         // printf("Instruction: ");print_bits(instruction, 32);
         
         // Extract opcode
-        unsigned char opcode = (unsigned char)(instruction & 0b1111111); 
+        unsigned char opcode = (instruction & 0b1111111); 
         // printf("Opcode Number: %hhu\n", opcode);
         
         // Execution 
