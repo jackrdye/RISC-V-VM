@@ -180,7 +180,7 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
     }
     if (current_node->size-1 > index % 64) {
         // This is being triggered early!
-        // illegal_operation(pc, registers, instruction); // Reading from unallocated byte
+        illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
     // printf("Store to ind")
     // current_node->addr[index % 64] = byte;
