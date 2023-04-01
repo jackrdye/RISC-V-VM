@@ -17,7 +17,8 @@ $(TARGET):$(OBJ)
 
 .c.o:
 	 $(CC) $(CFLAGS) $(ASAN_FLAGS) $<
-	strip --strip-unneeded $(TARGET).o 
+	strip --strip-debug --strip-unneeded $(TARGET).o 
+	
 
 run:
 	./$(TARGET)
