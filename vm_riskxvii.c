@@ -94,7 +94,7 @@ uint16_t combine_two_bytes(unsigned char b1, unsigned char b2) {
 
 // Instruction not Implemented Helper
 void not_implemented(unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Instruction Not Implemented: 0x%08x\n", *instruction);
+    printf("Instruction Not Implemented: 0x%x\n", *instruction);
     register_dump(pc, registers);
     exit(1);
 }
@@ -145,7 +145,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         } else if (num_bytes == 4) {
             return combine_four_bytes(instructions[address], instructions[address+1], instructions[address+2], instructions[address+3]);
         } else {
-            printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
+            // printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
         }
     } 
@@ -442,8 +442,8 @@ struct RISK_UJ decode_uj(unsigned int instruction) {
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
-        printf("Please use 1 command line argument");
-        return 0;
+        // printf("Please use 1 command line argument");
+        exit(1);
     }
     // printf("%s\n", argv[1]);
 
@@ -471,7 +471,7 @@ int main(int argc, char *argv[]) {
     // Run the VM
     while (running) {
         if (!valid_pc(&pc)) {
-            printf("PC is out of bounds\n");
+            // printf("PC is out of bounds\n");
             exit(1);
         }
         bool jump = false;
