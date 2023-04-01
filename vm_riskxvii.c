@@ -188,7 +188,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
     // ------------------------ Heap Banks --------------------------
     } else if (address >= 0xB700 && address + (num_bytes -1) < 0xD700) {
         if (num_bytes == 1) {
-            return read_byte_from_heap(head, &address, pc, registers, instruction);
+            return read_byte_from_heap(head, address, pc, registers, instruction);
         } else if (num_bytes == 2) {
             return combine_two_bytes(
                 read_byte_from_heap(head, address, pc, registers, instruction), 
