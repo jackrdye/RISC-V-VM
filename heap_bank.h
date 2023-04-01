@@ -77,7 +77,7 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
 
     // Assign memory for each heap_bank
     current_node = start_node;
-    unsigned int remaining = bytes_to_allocate;
+    unsigned int remaining = *bytes_to_allocate;
     
     for (int i = 0; i < required_banks; i++) {
         // Determine start
