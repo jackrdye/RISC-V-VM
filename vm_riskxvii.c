@@ -195,7 +195,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
                 read_byte_from_heap(head, address + 1, pc, registers, instruction)
                 );
         } else if (num_bytes == 4) {
-            return combine_four_bytes(read_byte_from_heap(head, &address, pc, registers, instruction), 
+            return combine_four_bytes(read_byte_from_heap(head, address, pc, registers, instruction), 
                 read_byte_from_heap(head, address + 1, pc, registers, instruction), 
                 read_byte_from_heap(head, address + 2, pc, registers, instruction), 
                 read_byte_from_heap(head, address + 3, pc, registers, instruction) 
