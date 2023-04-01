@@ -613,10 +613,9 @@ int main(int argc, char *argv[]) {
             unsigned short new_pc = pc + UJ.imm;
             if (valid_pc(&new_pc)) {
                 pc = pc + UJ.imm;
-            } 
-            // else {
-            //     illegal_operation(&pc, registers, &instruction);
-            // }
+            } else {
+                illegal_operation(&pc, registers, &instruction);
+            }
             jump = true;
             // print_registers(registers);
         }
