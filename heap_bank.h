@@ -58,8 +58,9 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
         // printf("Bank %d size: (%u)\n", i, current_node->size);
         if (i == 128) {
             start_node = NULL;
+            break;
         }
-        if (current_node->size != 0) { 
+        else if (current_node->size != 0) { 
             // Bank Occupied
             num_banks = 0;
             current_node = current_node->next;
