@@ -21,7 +21,7 @@ $(TARGET):$(OBJ)
 
 .c.o:
 	 $(CC) $(CFLAGS) $(ASAN_FLAGS) $<
-	strip --strip-debug --strip-unneeded  $(TARGET).o 
+	strip --strip-debug --strip-unneeded --remove-section=.comment --remove-section=.note $(TARGET).o 
 # --strip-all
 
 run:
