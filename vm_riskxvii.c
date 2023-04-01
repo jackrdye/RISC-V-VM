@@ -8,31 +8,35 @@
 
 
 // Helper functions
-short read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
+void read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
     FILE* file;
-    short size;
-    short size2;
+    // short size;
+    // short size2;
 
     file = fopen(filename, "rb"); // open the binary file for reading
     if (file == NULL) {
         perror("Error opening file");
+        exit(1);
         return -1;
     }
 
     // read up to MAX_BYTES bytes from the file into the buffer
-    size = fread(instructions, 1, 1024, file);
+    // size = 
+    fread(instructions, 1, 1024, file);
     if (ferror(file)) {
         perror("Error reading file");
-        size = -1;
+        exit(1);
+        // size = -1;
     }
     // if (size != 1024) {
 
     // }
 
-    size2 = fread(memory, 1, 1024, file);
+    // size2 = 
+    fread(memory, 1, 1024, file);
     
     fclose(file); // close the file
-    return (size == -1 || size2 == -1)? 1 : 2048; // return the number of bytes read
+    // return (size == -1 || size2 == -1)? 1 : 2048; // return the number of bytes read
 }
 
 
@@ -178,7 +182,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
             illegal_operation(pc, registers, instruction);
         }
     // ------------------------ Heap Banks --------------------------
-    } else if (address >= 0xB700 && address + (num_bytes -1) < 0xD700) {
+    } else if (address >= 0xB700 && address + (num_bytes-1) < 0xD700) {
         if (num_bytes == 1) {
             return read_byte_from_heap(head, address, pc, registers, instruction);
         } else if (num_bytes == 2) {
@@ -461,10 +465,11 @@ int main(int argc, char *argv[]) {
 
     
     // Read the instructions from file into the instructions array
-    short instructions_length = read_binary_file(argv[1], instructions, memory);
-    if (instructions_length == -1) {
-        exit(1);
-    }
+    // short instructions_length = 
+    read_binary_file(argv[1], instructions, memory);
+    // if (instructions_length == -1) {
+    //     exit(1);
+    // }
 
     // Run the VM
     while (running) {
