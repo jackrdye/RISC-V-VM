@@ -7,12 +7,12 @@
 // Decode Instructions & Load into struct
 // Type R
 struct RISK_R {
-    unsigned int func7 : 7;
-    unsigned int rs2 : 5;
-    unsigned int rs1 : 5;
-    unsigned int func3 : 3;
-    unsigned int rd : 5;
-    unsigned int opcode : 7;
+    unsigned char func7 : 7;
+    unsigned char rs2 : 5;
+    unsigned char rs1 : 5;
+    unsigned char func3 : 3;
+    unsigned char rd : 5;
+    unsigned char opcode : 7;
 };
 struct RISK_R decode_r(unsigned int instruction) {
     struct RISK_R r;
