@@ -54,12 +54,8 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
     Node *start_node = head;
     unsigned short start_heap_bank_index = 0;
     short num_banks = 0;
-    for (int i = 0; i < 129; i++) {
+    for (int i = 0; i < 128; i++) {
         printf("Current Bank %d size: (%u)\n", i, current_node->size);
-        if (i == 128) {
-            start_node = NULL;
-            break;
-        }
         else if (current_node->size != 0) { 
             // Bank Occupied
             num_banks = 0;
@@ -76,6 +72,11 @@ unsigned int allocate(Node *head, unsigned int *bytes_to_allocate) {
             } else {
                 current_node = current_node->next;
             }
+        }
+        // Reached end of linked list
+        if (i == 127) {
+            start_node = NULL;
+            break;
         }
     }
 
