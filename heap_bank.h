@@ -175,10 +175,11 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
     }
     unsigned short heap_bank_num = index / 64;
     Node *current_node = head;
-    for (int i = 0; i < heap_bank_num + 1; i++) {
+    for (int i = 0; i < heap_bank_num; i++) {
         current_node = current_node->next;
     }
-    if (current_node->size < index % 64) {
+    if (current_node->size-1 > index % 64) {
+        // This is being triggered early!
         // illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
     // printf("Store to ind")
