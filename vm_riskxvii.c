@@ -8,36 +8,36 @@
 #include "riscv_types.h"
 
 // Helper functions
-void read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
-    FILE* file;
-    // short size;
-    // short size2;
+// void read_binary_file(const char* filename, unsigned char *instructions, unsigned char *memory) {
+//     FILE* file;
+//     // short size;
+//     // short size2;
 
-    file = fopen(filename, "rb"); // open the binary file for reading
-    if (file == NULL) {
-        // perror("Error opening file");
-        exit(1);
-        // return -1;
-    }
+//     file = fopen(filename, "rb"); // open the binary file for reading
+//     if (file == NULL) {
+//         // perror("Error opening file");
+//         exit(1);
+//         // return -1;
+//     }
 
-    // read up to MAX_BYTES bytes from the file into the buffer
-    // size = 
-    fread(instructions, 1, 1024, file);
-    fread(memory, 1, 1024, file);
-    if (ferror(file)) {
-        // perror("Error reading file");
-        exit(1);
-        // size = -1;
-    }
-    // if (size != 1024) {
+//     // read up to MAX_BYTES bytes from the file into the buffer
+//     // size = 
+//     fread(instructions, 1, 1024, file);
+//     fread(memory, 1, 1024, file);
+//     if (ferror(file)) {
+//         // perror("Error reading file");
+//         exit(1);
+//         // size = -1;
+//     }
+//     // if (size != 1024) {
 
-    // }
+//     // }
 
-    // size2 = 
+//     // size2 = 
     
-    fclose(file); // close the file
-    // return (size == -1 || size2 == -1)? 1 : 2048; // return the number of bytes read
-}
+//     fclose(file); // close the file
+//     // return (size == -1 || size2 == -1)? 1 : 2048; // return the number of bytes read
+// }
 
 
 // void print_buffer(unsigned char* buffer, int size) {
@@ -193,7 +193,7 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         not_implemented(pc, registers, instruction);
     }
     // printf("Shouldn't hit this - end of read memory\n");
-    // return -1;
+    return -1;
 }
 
 // Store in memory helper
@@ -316,10 +316,22 @@ int main(int argc, char *argv[]) {
     
     // Read the instructions from file into the instructions array
     // short instructions_length = 
-    read_binary_file(argv[1], instructions, memory);
-    // if (instructions_length == -1) {
-    //     exit(1);
-    // }
+    // read_binary_file(argv[1], instructions, memory);
+    FILE* file;
+    // short size;
+    // short size2;
+
+    file = fopen(argv[1], "rb"); // open the binary file for reading
+    if (file == NULL) {
+        exit(1);
+    }
+    fread(instructions, 1, 1024, file);
+    fread(memory, 1, 1024, file);
+    if (ferror(file)) {
+        exit(1);
+    }
+    fclose(file);
+    
 
     // Run the VM
     while (1) {
