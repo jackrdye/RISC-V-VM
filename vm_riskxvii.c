@@ -265,10 +265,10 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         // Request a chunck of memory with the size of the value being stored 
         // Pointer to the allocated memory (starting address) will be stored in R[28]
         // If the memory cannot be allocated R[28] should be set to 0.
-        printf("Allocate (%u) Bytes\n", value);
+        // printf("Allocate (%u) Bytes\n", value);
         unsigned int allocated_address = allocate(head, &value);
         registers[28] = ((allocated_address == 0) ? 0 : allocated_address);
-        printf("Bytes allocated at, Register 28: (%x)\n", registers[28]);
+        // printf("Bytes allocated at, Register 28: (%x)\n", registers[28]);
     } 
     // 0x834
     else if (address == 0x834) {
