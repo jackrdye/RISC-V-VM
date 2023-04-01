@@ -7,15 +7,18 @@
 
 // Register Dump
 void register_dump(unsigned short *pc, unsigned int *registers) {
-    printf("PC = 0x%x;\n", *pc);
+    char temp[] = " = 0x";
+    // printf("PC = 0x%08x;\n", *pc);
+    printf("PC");printf("%s", temp);printf("%08x;\n", *pc);
     for (int i = 0; i < 32; i ++) {
-        printf("R[%d] = 0x%x;\n", i, registers[i]);
+        // printf("R[%d] = 0x%08x;\n", i, registers[i]);
+        printf("R[%d]", i);printf("%s", temp);printf("%08x;\n", registers[i]);
     }
 }
 
 // // Illegal Operation Helper
 void illegal_operation(unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
-    printf("Illegal Operation: 0x%x\n", *instruction);
+    printf("Illegal Operation: 0x%08x\n", *instruction);
     register_dump(pc, registers);
     exit(1);
 }
