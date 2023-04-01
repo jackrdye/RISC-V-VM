@@ -444,7 +444,7 @@ int main(int argc, char *argv[]) {
         } 
         else if (opcode == 0b1100111) {
             // Decode Type I instruction
-            struct RISK_I I = decode_i(instruction);
+            const struct RISK_I I = decode_i(instruction);
             // 33. jalr
             store_in_register(registers, I.rd, pc + 4);
             // print_register(registers, 1);
@@ -460,7 +460,7 @@ int main(int argc, char *argv[]) {
         }
         else if (opcode == 0b0000011) {
             // Decode Type I instruction
-            struct RISK_I I = decode_i(instruction);
+            const struct RISK_I I = decode_i(instruction);
             // Memory Access Operations
             if (I.func3 == 0b000) {
                 // 14. lb
@@ -500,7 +500,7 @@ int main(int argc, char *argv[]) {
         // Type S
         else if (opcode == 0b0100011) {
             // Decode Type S instruction
-            struct RISK_S S = decode_s(instruction);
+            const struct RISK_S S = decode_s(instruction);
             
             if (S.func3 == 0b000) {
                 // 19. sb
@@ -523,7 +523,7 @@ int main(int argc, char *argv[]) {
         // Type SB
         else if (opcode == 0b1100011) {
             // Decode Type SB instruction
-            struct RISK_SB SB = decode_sb(instruction);
+            const struct RISK_SB SB = decode_sb(instruction);
 
             if (SB.func3 == 0b000) {
                 // 26. beq
@@ -599,7 +599,7 @@ int main(int argc, char *argv[]) {
         // Type U
         else if (opcode == 0b0110111) {
             // Decode Type U instruction
-            struct RISK_U U = decode_u(instruction);
+            const struct RISK_U U = decode_u(instruction);
 
             // 4. lui
             store_in_register(registers, U.rd, U.imm);
@@ -613,9 +613,10 @@ int main(int argc, char *argv[]) {
             unsigned short new_pc = pc + UJ.imm;
             if (valid_pc(&new_pc)) {
                 pc = pc + UJ.imm;
-            } else {
-                illegal_operation(&pc, registers, &instruction);
-            }
+            } 
+            // else {
+            //     illegal_operation(&pc, registers, &instruction);
+            // }
             jump = true;
             // print_registers(registers);
         }
