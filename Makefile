@@ -2,7 +2,7 @@ TARGET = vm_riskxvii
 
 CC = gcc
 
-CFLAGS     = -c -Wall -Wvla -Os -fno-unwind-tables -fno-asynchronous-unwind-tables -fmerge-all-constants
+CFLAGS     = -c -Wall -Wvla -Os -fno-unwind-tables -fno-asynchronous-unwind-tables -fmerge-all-constants -fno-ident
 # -m32
 # -fno-math-errno -fno-unroll-loops -fno-exceptions 
 # -nostartfiles -nodefaultlibs
