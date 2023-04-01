@@ -412,16 +412,16 @@ int main(int argc, char *argv[]) {
                 // 2. addi
                 // registers[I.rd] = registers[I.rs1] + I.imm;
                 // Bitfields dont allow memory address, therefore cannot pass a pointer - must pass a copy
-                // if (I.imm > 0 && registers[I.rs1] > (__UINT32_MAX__ - I.imm)) {
-                //     // Integer Overflow
-                //     store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
-                //     // printf("Integer overflow detected in 'addi'\n");
-                // } else if (I.imm < 0 && registers[I.rs1] < I.imm) {
-                //     store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
-                //     // printf("Integer underflow detected in 'addi'\n");
-                // } else {
+                if (I.imm > 0 && registers[I.rs1] > (__UINT32_MAX__ - I.imm)) {
+                    // Integer Overflow
                     store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
-                // }
+                    // printf("Integer overflow detected in 'addi'\n");
+                } else if (I.imm < 0 && registers[I.rs1] < I.imm) {
+                    store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
+                    // printf("Integer underflow detected in 'addi'\n");
+                } else {
+                    store_in_register(registers, I.rd, registers[I.rs1] + I.imm);
+                }
             } else if (I.func3 == 0b100) {
                 // 6. xori
                 store_in_register(registers, I.rd, registers[I.rs1] ^ I.imm);
