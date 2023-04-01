@@ -2,7 +2,7 @@ TARGET = vm_riskxvii
 
 CC = gcc
 
-CFLAGS     = -c -Wall -Wvla -Oz 
+CFLAGS     = -c -Wall -Wvla -Os 
 # -fno-math-errno -fno-unroll-loops -fno-exceptions 
 # -nostartfiles -nodefaultlibs
 # -Wall -Wvla
@@ -20,7 +20,7 @@ $(TARGET):$(OBJ)
 
 .c.o:
 	 $(CC) $(CFLAGS) $(ASAN_FLAGS) $<
-	strip --strip-debug --strip-unneeded $(TARGET).o 
+	strip --strip-debug --strip-unneeded --strip-all $(TARGET).o 
 	
 
 run:
