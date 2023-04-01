@@ -23,6 +23,7 @@ void read_binary_file(const char* filename, unsigned char *instructions, unsigne
     // read up to MAX_BYTES bytes from the file into the buffer
     // size = 
     fread(instructions, 1, 1024, file);
+    fread(memory, 1, 1024, file);
     if (ferror(file)) {
         // perror("Error reading file");
         exit(1);
@@ -33,7 +34,6 @@ void read_binary_file(const char* filename, unsigned char *instructions, unsigne
     // }
 
     // size2 = 
-    fread(memory, 1, 1024, file);
     
     fclose(file); // close the file
     // return (size == -1 || size2 == -1)? 1 : 2048; // return the number of bytes read
@@ -456,8 +456,8 @@ int main(int argc, char *argv[]) {
     unsigned char memory[1024] = { 0 };
     // unsigned char virtual_routines[256]; 
     // unsigned char heap_bank[128][64]; // should use linked list!!!
-    unsigned int pc = 0;
-    bool running = true;
+    unsigned short pc = 0;
+    // bool running = true;
 
     // Create Heap Bank
     Node head_node;
@@ -472,7 +472,7 @@ int main(int argc, char *argv[]) {
     // }
 
     // Run the VM
-    while (running) {
+    while (1) {
         if (!valid_pc(&pc)) {
             // printf("PC is out of bounds\n");
             exit(1);
