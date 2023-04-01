@@ -451,8 +451,8 @@ int main(int argc, char *argv[]) {
         current_node->size = 0;
         current_node->start = 0;
         if (i != 127) {
-            Node new_node;
-            current_node->next = &new_node;
+            Node* new_node;
+            current_node->next = new_node;
             current_node = current_node->next;
         } else {
             current_node->next = NULL;
