@@ -106,9 +106,9 @@ bool valid_pc(unsigned short *pc) {
 
 // Store in register helper
 void store_in_register(unsigned int *registers, unsigned char store_in, int set_to) {
-    if (store_in == 0) {
+    if (store_in == 0 || store_in > 31) {
         // Cannot set zero register - Ignore any write
-    } else if (store_in > 31) {
+    // } else if (store_in > 31) {
         // Only 31 registers should be prevented anyway since rd, rs1, rs2 only 5 bits
     } else {
         // Set register 

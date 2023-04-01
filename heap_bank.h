@@ -45,7 +45,6 @@ Node* create_heap_bank(Node *head) {
             current_node->next = NULL;
         }
     }
-    current_node = NULL;
     return head;
 }
 
