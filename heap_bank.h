@@ -133,6 +133,10 @@ void free_heap_bank(Node *head, unsigned int *virtual_address) {
 
 unsigned char read_byte_from_heap(Node *head, unsigned int *virtual_address, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     unsigned int index = *virtual_address - 0xb700;
+    if (index > 8192) {
+        // Can't be allocated 
+        illegal_operation(pc, registers, instruction);
+    }
     unsigned short heap_bank_num = index / 64;
     Node *current_node = head;
     for (int i = 0; i < heap_bank_num; i++) {
@@ -144,15 +148,19 @@ unsigned char read_byte_from_heap(Node *head, unsigned int *virtual_address, uns
     return current_node->addr[index % 64];
 }
 
-unsigned char store_byte_in_heap(Node *head, unsigned int *virtual_address, unsigned char byte) {
+unsigned char store_byte_in_heap(Node *head, unsigned int *virtual_address, unsigned char byte, unsigned int *pc, unsigned int *registers, unsigned int *instruction) {
     unsigned int index = *virtual_address - 0xb700;
+    if (index > 8192) {
+        // Can't be allocated 
+        illegal_operation(pc, registers, instruction);
+    }
     unsigned short heap_bank_num = index / 64;
     Node *current_node = head;
     for (int i = 0; i < heap_bank_num; i++) {
         current_node = current_node->next;
     }
     if (current_node->size < index % 64) {
-        // illegal_operation();
+        illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
     return current_node->addr[index % 64] = byte;
 }

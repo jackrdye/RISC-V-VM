@@ -222,7 +222,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         printf("Can't write to instructions\n");
         illegal_operation(pc, registers, instruction);
     } 
-    else if (address > 0x8FF) {
+    else if (address > 0x8FF && address < 0xB700) {
         // Exceeds Memory & Virtual Routine bounds
         // Illegal operation
         printf("Exceeds memory bounds\n");
@@ -284,7 +284,22 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
         address = address - 0x0400;
         // memory[address] = value;
         memcpy(&memory[address], &value, num_bytes);
-    } else {
+    } 
+
+    // ---------------------- Heap Banks ----------------------
+    else if (address >= 0xB700) {
+        
+        store_byte_in_heap(head, &address, (unsigned char) value, pc, registers, instruction);
+        
+        if (num_bytes >= 2) {
+            store_byte_in_heap(head, &address, (unsigned char) (value >> 8), pc, registers, instruction);
+        } 
+        if (num_bytes >= 4) {
+            store_byte_in_heap(head, &address, (unsigned char) (value >> 16), pc, registers, instruction);
+            store_byte_in_heap(head, &address, (unsigned char) (value >> 24), pc, registers, instruction);
+        }
+    }
+    else {
         // Throw error 
         // Not implemented - Call to unimplemented Virtual Routine
         not_implemented(pc, registers, instruction);
@@ -446,20 +461,7 @@ int main(int argc, char *argv[]) {
     // Create Heap Bank
     Node head_node;
     Node *head = create_heap_bank(&head_node);
-    // Node *current_node = &head_node;
-    // for (int i = 0; i < 128; i++) {
-    //     current_node->addr = NULL;
-    //     current_node->size = 0;
-    //     current_node->start = 0;
-    //     if (i != 127) {
-    //         Node* new_node = (Node*)malloc(sizeof(Node));
-    //         current_node->next = new_node;
-    //         current_node = current_node->next;
-    //     } else {
-    //         current_node->next = NULL;
-    //     }
-    // }
-    // Node *head = &head_node;
+
     
     // Read the instructions from file into the instructions array
     short instructions_length = read_binary_file(argv[1], instructions, memory);
