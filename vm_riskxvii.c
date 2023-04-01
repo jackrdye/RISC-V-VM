@@ -304,9 +304,9 @@ int main(int argc, char *argv[]) {
 
     // Setup VM architecture 
     // Note - unsigned char = 1 byte, unsigned short = 2 bytes, unsigned int = 4 bytes.
-    const unsigned char instructions[1024] = {0}; // store 1024 bytes of instructions
-    const unsigned int registers[32] = { 0 }; // store 32 registers each containing 4 bytes
-    const unsigned char memory[1024] = { 0 };
+    unsigned char instructions[1024] = {0}; // store 1024 bytes of instructions
+    unsigned int registers[32] = { 0 }; // store 32 registers each containing 4 bytes
+    unsigned char memory[1024] = { 0 };
     unsigned short pc = 0;
 
     // Create Heap Bank
@@ -625,28 +625,4 @@ int main(int argc, char *argv[]) {
             pc += 4;
         }
     }
-
-
-
-
-
-
-
-    // print_buffer(instructions, length);
-    // printf("\nChar: (%u)\n", instructions[0]);
-    // printf("\nChar: (%u)\n", instructions[1]);
-    // printf("\nChar: (%u)\n", instructions[2]);
-    // printf("\nChar: (%u)\n", instructions[3]);
-    // printf("\nChar: (%u)\n", instructions[4]);
-    // printf("\nChar: (%u)\n", instructions[5]);
-    // unsigned int instruction1 = combine_bytes(instructions[4], instructions[5], instructions[6], instructions[7]);
-    
-    // printf("---(%u)---\n", instruction1);
-    // printf("Instruction: 0x%08x\n", instruction1);
-    // print_bits(instruction1);
-
-    return 0;
 }
-
-
-
