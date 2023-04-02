@@ -1,6 +1,6 @@
 TARGET = vm_riskxvii
 
-CC = /opt/riscv/bin/riscv64-unknown-elf-gcc-12.2.0
+CC = gcc
 
 CFLAGS     = -c -Wall -Wvla -Oz -s -fno-unwind-tables -fno-asynchronous-unwind-tables -fmerge-all-constants -fno-ident 
 # -mno-riscv-attribute
@@ -28,8 +28,8 @@ $(TARGET):$(OBJ)
 run:
 	./$(TARGET)
 
-test:
-	echo what are we testing?!
+run_test:
+	bash run_tests.sh
 
 clean:
 	rm -f *.o *.obj $(TARGET)
