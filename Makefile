@@ -1,8 +1,9 @@
 TARGET = vm_riskxvii
 
-CC = gcc
+CC = /opt/riscv/bin/riscv64-unknown-elf-gcc-12.2.0
 
-CFLAGS     = -c -Wall -Wvla -Os -fno-unwind-tables -fno-asynchronous-unwind-tables -fmerge-all-constants -fno-ident
+CFLAGS     = -c -Wall -Wvla -Oz -s -fno-unwind-tables -fno-asynchronous-unwind-tables -fmerge-all-constants -fno-ident 
+# -mno-riscv-attribute
 # -m32
 # -fno-math-errno -fno-unroll-loops -fno-exceptions 
 # -nostartfiles -nodefaultlibs
