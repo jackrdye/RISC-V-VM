@@ -10,6 +10,7 @@ CFLAGS     = -c -Wall -Wvla -Oz -s -fno-unwind-tables -fno-asynchronous-unwind-t
 # -Wall -Wvla
 # -Wall -Wvla -Werror -O0 -g -std=c11
 # ASAN_FLAGS = -fsanitize=address
+
 SRC        = vm_riskxvii.c
 OBJ        = $(SRC:.c=.o)
 
