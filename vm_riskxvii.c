@@ -120,13 +120,7 @@ void store_in_register(unsigned int *registers, unsigned char store_in, int set_
 // Load from memory helper
 unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int num_bytes, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
     // address = address - 0x0400;
-    // printf("%u", address);
     if (address >= 0x000 && address + (num_bytes-1)< 0x0400) {
-        // Throw error, Cannot read from instruction memory 
-        // Illegal operation
-        // printf("Can't read from instructions\n");
-        // print_bits(*instruction, 32);
-        // illegal_operation(pc, registers, instruction);
         if (num_bytes == 1) {
             return instructions[address];
         } else if (num_bytes == 2) {
@@ -134,7 +128,6 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         } else if (num_bytes == 4) {
             return combine_four_bytes(instructions[address], instructions[address+1], instructions[address+2], instructions[address+3]);
         } else {
-            // printf("Why are you trying to return %d number of bytes from memory?", num_bytes);
             illegal_operation(pc, registers, instruction);
         }
     } 
@@ -157,7 +150,6 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
     else if (address >= 0x0400 && address+(num_bytes-1) <= 0x7FF) {
         // Store in memory address
         address = address - 0x0400;
-        // memory[address] = value;
         if (num_bytes == 1) {
             return memory[address];
         } else if (num_bytes == 2) {
@@ -184,7 +176,6 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
                 read_byte_from_heap(head, address + 3, pc, registers, instruction) 
                 );
         } else {
-            // printf("Why are you trying to return %d number of bytes from a heap bank?", num_bytes);
             illegal_operation(pc, registers, instruction);
         }
     } else {
@@ -192,23 +183,17 @@ unsigned int read_memory(unsigned char *memory, unsigned char *instructions, Nod
         // Not implemented - Call to unimplemented Virtual Routine
         not_implemented(pc, registers, instruction);
     }
-    // printf("Shouldn't hit this - end of read memory\n");
-    return -1;
+    return -1; // Shouldn't reach here
 }
 
 // Store in memory helper
 void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *head, unsigned int address, unsigned int value, unsigned int num_bytes, unsigned short *pc, unsigned int *registers, unsigned int *instruction) {
-    // printf("PC=%u --- Write to (%x)\n", *pc, address);
     if (address < 0x0400) {
         // Throw error, Cannot overwrite instruction memory 
-        // Illegal operation
-        // printf("Can't write to instructions\n");
         illegal_operation(pc, registers, instruction);
     } 
     else if (address > 0x8FF && address < 0xB700) {
         // Exceeds Memory & Virtual Routine bounds
-        // Illegal operation
-        // printf("Exceeds memory bounds\n");
         illegal_operation(pc, registers, instruction);
     }
 
@@ -252,10 +237,9 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
     else if (address == 0x830) {
         // Malloc - Implement linked list
         // Request a chunck of memory with the size of the value being stored 
-        // Pointer to the allocated memory (starting address) will be stored in R[28]
-        // If the memory cannot be allocated R[28] should be set to 0.
-        // printf("Allocate (%u) Bytes\n", value);
         unsigned int allocated_address = allocate(head, &value);
+        // Pointer to the allocated memory (starting address) will be stored in R[28]
+            // If the memory cannot be allocated R[28] should be set to 0.
         registers[28] = ((allocated_address == 0) ? 0 : allocated_address);
         // printf("Bytes allocated at, Register 28: (%x)\n", registers[28]);
     } 
@@ -263,7 +247,6 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
     else if (address == 0x834) {
         // Free a chunk of memory starting at the value being stored.
         // If the value being stored was not an allocated address raise an illegal operation. 
-        // printf("Free Heap Bank located at (%x)\n", value);
         free_heap_bank(head, value, pc, registers, instruction); 
     }
     // ------------------ Normal Memory Storage ----------------
@@ -289,8 +272,7 @@ void store_in_memory(unsigned char *memory, unsigned char *instructions, Node *h
     }
     else {
         // Throw error 
-        // Not implemented - Call to unimplemented Virtual Routine
-        not_implemented(pc, registers, instruction);
+        not_implemented(pc, registers, instruction); // Call to unimplemented Virtual Routine
     }
 }
 
@@ -315,7 +297,6 @@ int main(int argc, char *argv[]) {
 
     
     // Read the instructions from file into the instructions array
-    // short instructions_length = 
     // read_binary_file(argv[1], instructions, memory);
     FILE* file;
 
@@ -410,7 +391,6 @@ int main(int argc, char *argv[]) {
             const struct RISK_I I = decode_i(instruction);
             if (I.func3 == 0b000) {
                 // 2. addi
-                // registers[I.rd] = registers[I.rs1] + I.imm;
                 // Bitfields dont allow memory address, therefore cannot pass a pointer - must pass a copy
                 if (I.imm > 0 && registers[I.rs1] > (__UINT32_MAX__ - I.imm)) {
                     // Integer Overflow
@@ -447,9 +427,7 @@ int main(int argc, char *argv[]) {
             const struct RISK_I I = decode_i(instruction);
             // 33. jalr
             store_in_register(registers, I.rd, pc + 4);
-            // print_register(registers, 1);
             unsigned short new_pc = registers[I.rs1] + I.imm;
-            // printf("\nNEW PC=(%u)\n", new_pc);
             if (new_pc < 0 || new_pc > 1019) {
                 // Throw error - setting pc to a value which exceeds instruction memory
                 illegal_operation(&pc, registers, &instruction);
@@ -474,22 +452,16 @@ int main(int argc, char *argv[]) {
                 store_in_register(registers, I.rd, (int) value_in_memory);
             } else if (I.func3 == 0b010) {
                 // 16. lw
-                // print_registers(registers);
-                // printf("Reg(%u) + Imm (%d)= (%u)\n",registers[I.rs1], I.imm, registers[I.rs1] + I.imm);
                 unsigned int address = registers[I.rs1] + I.imm;
                 unsigned int value_in_memory = read_memory(memory, instructions, head, address, 4, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, (int) value_in_memory);
-                // print_registers(registers);
-                // printf("We have finished lw\n");
             } else if (I.func3 == 0b100) {
                 // 17. lbu
                 unsigned int address = registers[I.rs1] + I.imm;
-                // unsigned char value_in_memory = read_memory(memory, instructions, head, address, 1, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, read_memory(memory, instructions, head, address, 1, &pc, registers, &instruction));
             } else if (I.func3 == 0b101) {
                 // 18. lhu
                 unsigned int address = registers[I.rs1] + I.imm;
-                // unsigned short value_in_memory = read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction);
                 store_in_register(registers, I.rd, read_memory(memory, instructions, head, address, 2, &pc, registers, &instruction));
             } else {
                 // func3 not detected -  not implemented
@@ -504,9 +476,6 @@ int main(int argc, char *argv[]) {
             
             if (S.func3 == 0b000) {
                 // 19. sb
-                // memory[registers[S.rs1] + S.imm] = registers[S.rs2];
-                // printf("Store in memory. memory addr-(%d). Value-(%d)\n", registers[S.rs1] + S.imm, registers[S.rs2]);
-                // printf("Register value=(%d). S IMM value=(%d)\n", registers[S.rs1], S.imm);
                 store_in_memory(memory, instructions, head, registers[S.rs1] + S.imm, registers[S.rs2], 1, &pc, registers, &instruction);
             } else if (S.func3 == 0b001) {
                 // 20. sh
@@ -617,16 +586,11 @@ int main(int argc, char *argv[]) {
                 illegal_operation(&pc, registers, &instruction);
             }
             jump = true;
-            // print_registers(registers);
         }
         // Instruction Not Implemented
         else {
-            // Opcode not detected -  not implemented
-            not_implemented(&pc, registers, &instruction);
+            not_implemented(&pc, registers, &instruction); // Opcode not detected -  not implemented
         }
-        // print_registers(registers);
-        // print_memory(memory);
-        // Increment Program Counter
 
         // If jumped to another address don't increment PC, else increment
         if (jump == true) {
