@@ -8,10 +8,8 @@
 // Register Dump
 void register_dump(unsigned short *pc, unsigned int *registers) {
     char temp[] = " = 0x";
-    // printf("PC = 0x%08x;\n", *pc);
     printf("PC");printf("%s", temp);printf("%08x;\n", *pc);
     for (int i = 0; i < 32; i ++) {
-        // printf("R[%d] = 0x%08x;\n", i, registers[i]);
         printf("R[%d]", i);printf("%s", temp);printf("%08x;\n", registers[i]);
     }
 }
@@ -184,7 +182,6 @@ void store_byte_in_heap(Node *head, unsigned int virtual_address, unsigned char 
     if (current_node->size-1 < index % 64 || current_node->size == 0) {
         illegal_operation(pc, registers, instruction); // Reading from unallocated byte
     }
-    // printf("Store to ind")
     current_node->addr[index % 64] = byte;
     
 }
