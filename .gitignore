@@ -3,7 +3,7 @@
 
 # Ignore everything.
 *
-/tests/
+
 # But descend into directories.
 !*/
 
@@ -27,6 +27,7 @@ build/
 
 # Don't ignore anything in the tests folder.
 # !tests/*/*.*
+/tests/*/*.*
 !examples/*/*.*
 !examples/
 
