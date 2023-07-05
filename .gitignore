@@ -3,6 +3,7 @@
 
 # Ignore everything.
 *
+/tests/
 # But descend into directories.
 !*/
 
